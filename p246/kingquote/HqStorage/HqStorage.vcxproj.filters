@@ -27,6 +27,21 @@
     <ClInclude Include="MemMapFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="dtz.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Stockdrv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="strutil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="int64map.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BoostFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

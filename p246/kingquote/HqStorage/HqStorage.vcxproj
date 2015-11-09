@@ -132,9 +132,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoostFile.h" />
+    <ClInclude Include="dtz.h" />
     <ClInclude Include="HqFile.h" />
+    <ClInclude Include="int64map.h" />
     <ClInclude Include="MemMapFile.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Stockdrv.h" />
+    <ClInclude Include="strutil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="HqFile.cpp" />
