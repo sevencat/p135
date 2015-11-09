@@ -40,7 +40,7 @@ public:
 	asio::io_service ioqueue;//io队列
 	HqCfg param;
 
-	//其实只是收盘作业 
+	//收盘作业和初始化!!!
 	HqLifeCycle _hq_infi;
 
 	//关闭当前文件
