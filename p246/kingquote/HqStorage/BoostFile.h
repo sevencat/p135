@@ -1,12 +1,7 @@
 #pragma once
-#include <boost/version.hpp>
 #include <boost/interprocess/detail/os_file_functions.hpp>
 #include <string>
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 
-//struct OVERLAPPED;
-//extern "C" __declspec(dllimport) int __stdcall ReadFile(void *hnd, void *buffer, unsigned long bytes_to_write,unsigned long *bytes_written, OVERLAPPED* overlapped);
 class BoostFile
 {
 public:
@@ -21,28 +16,14 @@ public:
 
 	bool create_new_file(const char *name, boost::interprocess::mode_t mode = boost::interprocess::read_write, bool temporary = false)
 	{
-		//Del by lay 20100902
-		//_handle=boost::interprocess::ipcdetail::create_new_file(name,mode,temporary);
-
-
-		//<<<Add by lay 20100902
-#if BOOST_VERSION>=104601
 		_handle=boost::interprocess::ipcdetail::create_or_open_file(name,mode,boost::interprocess::permissions(),temporary);
-#else
-		_handle=boost::interprocess::ipcdetail::create_or_open_file(name,mode,temporary);
-#endif
 		if (valid())
 			return truncate_file(0);
 		return false;
-		//>>>Add by lay 20100902
 	}
 	bool create_or_open_file(const char *name, boost::interprocess::mode_t mode = boost::interprocess::read_write, bool temporary = false)
 	{
-#if BOOST_VERSION>=104601
 		_handle=boost::interprocess::ipcdetail::create_or_open_file(name,mode,boost::interprocess::permissions(),temporary);
-#else
-		_handle=boost::interprocess::ipcdetail::create_or_open_file(name,mode,temporary);
-#endif
 		return valid();
 	}
 	bool open_existing_file(const char *name, boost::interprocess::mode_t mode = boost::interprocess::read_write, bool temporary = false)
@@ -115,13 +96,13 @@ public:
 	bool read_file(void *data, std::size_t numdata)
 	{
 		unsigned long readbytes=0;
-		int ret=ReadFile(_handle,data,numdata,&readbytes,NULL);
+		int ret= boost::interprocess::winapi::ReadFile(_handle,data,numdata,&readbytes,NULL);
 		return numdata==readbytes;
 	}
 	int read_file_length(void *data, std::size_t numdata)
 	{
 		unsigned long readbytes=0;
-		int ret=ReadFile(_handle,data,numdata,&readbytes,NULL);
+		int ret= boost::interprocess::winapi::ReadFile(_handle,data,numdata,&readbytes,NULL);
 		return readbytes;
 	}
 private:

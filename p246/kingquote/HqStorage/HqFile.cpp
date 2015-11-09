@@ -10,3 +10,8 @@ HqFile::HqFile()
 HqFile::~HqFile()
 {
 }
+
+void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
+{
+	return;
+}

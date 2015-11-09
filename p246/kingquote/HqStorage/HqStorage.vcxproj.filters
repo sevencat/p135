@@ -42,6 +42,12 @@
     <ClInclude Include="BoostFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HqCfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StkDrv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -51,6 +57,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MemMapFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HqCfg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StkDrv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

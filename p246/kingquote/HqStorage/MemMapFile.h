@@ -1,4 +1,5 @@
 #pragma once
+#include <boost/interprocess/detail/os_file_functions.hpp>
 
 namespace boost
 {

@@ -134,14 +134,17 @@
   <ItemGroup>
     <ClInclude Include="BoostFile.h" />
     <ClInclude Include="dtz.h" />
+    <ClInclude Include="HqCfg.h" />
     <ClInclude Include="HqFile.h" />
     <ClInclude Include="int64map.h" />
     <ClInclude Include="MemMapFile.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StkDrv.h" />
     <ClInclude Include="Stockdrv.h" />
     <ClInclude Include="strutil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HqCfg.cpp" />
     <ClCompile Include="HqFile.cpp" />
     <ClCompile Include="MemMapFile.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -150,6 +153,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StkDrv.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

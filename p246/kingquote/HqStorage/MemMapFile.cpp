@@ -3,7 +3,7 @@
 #include <fstream>
 #include <boost/interprocess/file_mapping.hpp>
 #include <boost/interprocess/mapped_region.hpp>
-#include <boost/interprocess/detail/os_file_functions.hpp>
+
 #include "MemMapFile.h"
 
 void MemMapFile::close()

@@ -1,10 +1,12 @@
 #pragma once
+#include <unordered_map>
+#include <stdint.h>
 
 //我们假设key的长度最多是6！！！，正好没有一个uint64长！
 class KingInt64ToIntMap
 {
 public:
-	boost::unordered_map<unsigned long long,int> m_mapPosition;
+	std::unordered_map<uint64_t,int> m_mapPosition;
 
 	bool  InitMap(int nHashTableSize=0)
 	{
@@ -17,59 +19,31 @@ public:
 		return InitMap(nHashTableSize);
 	}
 
-	bool  AddToMap(unsigned long long key,int position)
+	bool  AddToMap(uint64_t key,int position)
 	{
 		m_mapPosition[key]=position;
 		return true;
 	}
 
-	bool  AddToMap(LPCTSTR strKey,int position)
+	bool AddToMap(uint16_t mktid,const char *symbol,int posotion)
 	{
-		if( strKey == NULL )
-			return false;
-		return AddToMap(KeyToInt64(strKey),position);
+		uint64_t curkey = KeyToInt64(symbol, mktid);
+		return AddToMap(curkey, posotion);
 	}
 
-	bool  AddToMap(CodeInfo* pStock,int position)
+	int GetPosition(uint16_t mktid, const char *symbol)
 	{
-		if(pStock == NULL )
-			return false;
-
-		return AddToMap(pStock->m_cCode,position);
+		uint64_t curkey = KeyToInt64(symbol, mktid);
+		return GetStockByMap(curkey);
 	}
 
-	bool  AddToMap(StockUserInfo* pStock,int position)
+	bool  DeleteFromMap(uint64_t lKey)
 	{
-		if( pStock == NULL )
-			return false;
-		return AddToMap( &pStock->m_ciStockCode,position );
-	}
-
-
-	bool  AddToMap(const std::string &strKey,int position)
-	{
-		if(strKey.empty())
-			return false;
-		return AddToMap(strKey.c_str(),position);	
-		return true;
-	}
-
-	bool  DeleteFromMap(unsigned long long lKey)
-	{
-		boost::unordered_map<unsigned long long,int>::iterator it=m_mapPosition.find(lKey);
+		std::unordered_map<uint64_t, int>::iterator it = m_mapPosition.find(lKey);
 		if(it==m_mapPosition.end())
 			return false;
 		m_mapPosition.erase(it);
 		return true;
-	}
-
-	bool  DeleteFromMap(const char* lKey)
-	{
-		if(lKey==NULL)
-			return false;
-		if(lKey[0]==0)
-			return false;
-		return DeleteFromMap(KeyToInt64(lKey));
 	}
 
 	void  DeleteMap()
@@ -77,58 +51,39 @@ public:
 		m_mapPosition.clear();
 	}
 
-	int GetStockByMap(StockUserInfo* pKey)
-	{
-		if(pKey==NULL)
-			return -1;
-		return GetStockByMap(&pKey->m_ciStockCode);
-	}
 
-	int GetStockByMap(CodeInfo* pKey)
+	int GetStockByMap(uint64_t key)
 	{
-		if(pKey==NULL)
-			return -1;
-		return GetStockByMap(pKey->m_cCode);
-	}
-
-	int GetStockByMap(unsigned long long key)
-	{
-		boost::unordered_map<unsigned long long,int>::iterator it=m_mapPosition.find(key);
+		std::unordered_map<uint64_t,int>::iterator it=m_mapPosition.find(key);
 		if(it==m_mapPosition.end())
 			return -1;
 		return it->second;
 	}
 
-	int GetStockByMap(LPCTSTR key)
-	{
-		if(key==NULL)
-			return -1;
-		return GetStockByMap(KeyToInt64(key));
-	}
-
-	int GetStockByMap(const std::string &key) 
-	{
-		return GetStockByMap(key.c_str());
-	}
+	
 
 public:
-	static void YlsGetKey(unsigned long long  &strKey,CodeInfo* pCode) // strKey > 9
-	{
-		strKey=KeyToInt64(pCode->m_cCode);
-	}
 
-	static unsigned long long KeyToInt64(const char *key)
+	static uint64_t KeyToInt64(const char *key,int16_t mkt)
 	{
-		unsigned long long result=0;
+		uint64_t result=0;
 		char *presult=(char *)&result;
-		strncpy(presult,key,6);
+		strncpy(presult+2,key,6);
 		//现在有没有四位的？应该没有了，除了2a01，判断一下也没事。
-		if(presult[5]==' ')
+		if(presult[7]==' ')
 		{
-			presult[5]=0;
-			if(presult[4]==' ')
-				presult[4]=0;
+			presult[7]=0;
+			if (presult[6] == ' ')
+			{
+				presult[6] = 0;
+				if (presult[5] == ' ')
+				{
+					presult[5] = 0;
+				}
+			}
 		}
+		presult[0] = mkt % 256;
+		presult[1] = mkt / 256;
 		return result;
 	}
 };
