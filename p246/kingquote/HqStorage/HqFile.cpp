@@ -194,3 +194,7 @@ bool HqFile::load_cfg(pugi::xml_node& nodecfg)
 
 	return true;
 }
+
+void HqFile::handle_timer(const asio::error_code& e)
+{
+}
