@@ -21,12 +21,21 @@
     <ClInclude Include="stdafx.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="hqdef.h">
+    <ClInclude Include="HqFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MemMapFile.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HqFile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MemMapFile.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

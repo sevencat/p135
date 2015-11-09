@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "base\base.vcxproj", "{C03ACBA6-374E-452B-B806-98213ED6A3F8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HqStorage", "HqStorage\HqStorage.vcxproj", "{8602DDC7-0D24-4D23-B478-DCCDFE98F5A4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HqUi", "HqUi\HqUi.vcxproj", "{46AA77A4-46D9-4BE3-B205-66A5041A2780}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -15,6 +19,14 @@ Global
 		{C03ACBA6-374E-452B-B806-98213ED6A3F8}.Debug|Win32.Build.0 = Debug|Win32
 		{C03ACBA6-374E-452B-B806-98213ED6A3F8}.Release|Win32.ActiveCfg = Release|Win32
 		{C03ACBA6-374E-452B-B806-98213ED6A3F8}.Release|Win32.Build.0 = Release|Win32
+		{8602DDC7-0D24-4D23-B478-DCCDFE98F5A4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8602DDC7-0D24-4D23-B478-DCCDFE98F5A4}.Debug|Win32.Build.0 = Debug|Win32
+		{8602DDC7-0D24-4D23-B478-DCCDFE98F5A4}.Release|Win32.ActiveCfg = Release|Win32
+		{8602DDC7-0D24-4D23-B478-DCCDFE98F5A4}.Release|Win32.Build.0 = Release|Win32
+		{46AA77A4-46D9-4BE3-B205-66A5041A2780}.Debug|Win32.ActiveCfg = Debug|Win32
+		{46AA77A4-46D9-4BE3-B205-66A5041A2780}.Debug|Win32.Build.0 = Debug|Win32
+		{46AA77A4-46D9-4BE3-B205-66A5041A2780}.Release|Win32.ActiveCfg = Release|Win32
+		{46AA77A4-46D9-4BE3-B205-66A5041A2780}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
