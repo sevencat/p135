@@ -15,5 +15,6 @@ public:
 	HqFileHdr *stk_hdr;//文件头部
 	BoostFile tick_file;//逐笔文件初始化用的
 	void handle_rpt(RCV_REPORT_STRUCTEx *rpt);
+	asio::io_service ioqueue;//io队列
 };
 

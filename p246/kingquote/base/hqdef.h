@@ -67,33 +67,54 @@ public:
 };
 
 
-#define HQFILEITEMCOUNT 14336
 //头部信息，可以设定为
+//头部  reccount条HqRecord  reccount*mincount条HqMinRecord
 class HqFileHdr
 {
 public:
+	int32_t hdrflag;//头部=0x00ffffff
 	int32_t dt;//当前日期
-	int32_t count;//总数量
+	int32_t stkchgtime;//股票数量变化时间
+	int32_t reccount;//总数量
 	int32_t mincount;//分钟线数量
 	int32_t ticklastpos;//最后一个tick块数据
-	HqRecord rtrec[HQFILEITEMCOUNT];
-	HqMinRecord minrec[0];
-	static int32_t get_hdr_size(int hqmincount)
+	HqRecord rtrec[0];
+	//HqMinRecord minrec[0];
+
+	//获取头部大小，不包含tick数据
+	static int32_t get_hdr_size(int recount,int hqmincount)
 	{
-		int32_t strsize = sizeof(HqFileHdr);
-		strsize += hqmincount*HQFILEITEMCOUNT*sizeof(HqMinRecord);
+		int32_t strsize = sizeof(HqFileHdr) + recount*sizeof(HqRecord) + hqmincount*recount*sizeof(HqMinRecord);
 		return strsize;
 	}
+
+	//获取初始化的文件大小
+	static int32_t get_init_size(int recount, int hqmincount)
+	{
+		int32_t totalsize = get_hdr_size(recount, hqmincount);
+		return totalsize + recount*sizeof(HqTickBlock);
+	}
+
+	int32_t get_size()
+	{
+		return get_hdr_size(reccount, mincount);
+	}
+
 	HqMinRecord *get_min_rec_by_idx(int stkidx)
 	{
-		return &minrec[stkidx + mincount];
+		char *pdata = (char *)this;
+		pdata + = sizeof(HqFileHdr) + reccount*sizeof(HqRecord);
+		HqMinRecord *mindata = (HqMinRecord *)pdata;
+		return mindata + stkidx*mincount;
 	}
 	int64_t get_tickblock(int idx)
 	{
 		//取得第N块的逐笔偏移量
-		int64_t hdrsize = get_hdr_size(mincount);
+		int64_t hdrsize = get_size();
 		return hdrsize + idx*sizeof(HqTickBlock);
 	}
+
+	
 };
 
 #pragma pack(pop)

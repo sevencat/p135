@@ -13,6 +13,6 @@ HqFile::~HqFile()
 
 void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 {
-	//1、实时，2、分钟，3、tick数据
+	//1、实时，2、分钟，3、tick数据,可以先写实时数据
 	return;
 }
