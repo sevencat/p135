@@ -10,13 +10,13 @@
 //
 
 #include <boost/bind.hpp>
-#include <boost/noncopyable.hpp>
-//#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/thread/recursive_mutex.hpp>
-#include <boost/thread/condition.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/weak_ptr.hpp>
+#include <boost/date_time/posix_time/ptime.hpp>
+#include <asio/basic_io_object.hpp>
+#include <asio/basic_deadline_timer.hpp>
+#include <boost/thread/recursive_mutex.hpp>
 
 namespace asio
 {

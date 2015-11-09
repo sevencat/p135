@@ -4,11 +4,11 @@
 #include "MemMapFile.h"
 #include "../base/BoostFile.h"
 #include "../base/Stockdrv.h"
-#include "../base/pugixml.hpp"
 #include <asio/io_service.hpp>
 #include "HqCfg.h"
 #include "../base/dtz.h"
 #include "HqLifeCycle.h"
+#include "../base/basic_repeating_timer_asio.h"
 
 namespace pugi
 {
@@ -28,10 +28,21 @@ public:
 	uint32_t _hsid;
 	int32_t _market_time_offset;
 	_datetime_t _curtm;
+	asio::repeating_timer* _loop_timer;
+
+	std::string _rt_dir;
+	std::string _panhou_dir;
+	
+	static std::string default_panhoudir;
+	static std::string default_rtdir;
+
 	void handle_rpt(RCV_REPORT_STRUCTEx *rpt);
 	asio::io_service ioqueue;//io∂”¡–
 	HqCfg param;
 	HqLifeCycle _hq_infi;
-	bool load_cfg(pugi::xml_node &nodecfg)
+	bool load_cfg(pugi::xml_node &nodecfg);
+
+public:
+	void handle_timer(const asio::error_code& e);
 };
 

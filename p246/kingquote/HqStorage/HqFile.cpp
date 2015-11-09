@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "HqFile.h"
-#include "../base/basic_repeating_timer_asio.h"
+
 #include "../base/pugixml.hpp"
 #include "../base/dtz.h"
 #include "../base/strutil.h"
+#include <asio/placeholders.hpp>
 
 HqFile::HqFile()
 {
@@ -154,12 +155,12 @@ bool HqFile::load_cfg(pugi::xml_node& nodecfg)
 	}
 
 	//处理各个路径问题
-	//_rt_dir = nodecfg.attribute("rtdir").value();
-	//_panhou_dir = nodecfg.attribute("panhou").value();
-	//if (_rt_dir.empty())
-	//	_rt_dir = default_rtdir;
-	//if (_panhou_dir.empty())
-	//	_panhou_dir = default_panhoudir;
+	_rt_dir = nodecfg.attribute("rtdir").value();
+	_panhou_dir = nodecfg.attribute("panhou").value();
+	if (_rt_dir.empty())
+		_rt_dir = default_rtdir;
+	if (_panhou_dir.empty())
+		_panhou_dir = default_panhoudir;
 
 	////确认这两个目录存在
 
@@ -178,8 +179,8 @@ bool HqFile::load_cfg(pugi::xml_node& nodecfg)
 	//}
 
 	////初始的创建，只处理定时器和事件
-	//_loop_timer = new asio::repeating_timer(_io_service);
-	//_loop_timer->start(boost::posix_time::seconds(15), boost::bind(&HqStorage::handle_timer, this, asio::placeholders::error));
+	_loop_timer = new asio::repeating_timer(ioqueue);
+	_loop_timer->start(boost::posix_time::seconds(15), boost::bind(&HqFile::handle_timer, this, asio::placeholders::error));
 
 
 	//if (_hsid < 0x2000)
