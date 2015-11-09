@@ -21,6 +21,16 @@ void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 	return;
 }
 
+void HqFile::close_current_file()
+{
+}
+
+void HqFile::load_exist_files()
+{
+	close_current_file();
+	//这里进行map文件
+}
+
 bool HqFile::load_cfg(pugi::xml_node& nodecfg)
 {
 	if (nodecfg.empty())
@@ -190,7 +200,7 @@ bool HqFile::load_cfg(pugi::xml_node& nodecfg)
 	//}
 
 	////加载当前的文件
-	//load_exist_files();
+	load_exist_files();
 
 	return true;
 }

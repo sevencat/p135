@@ -39,7 +39,13 @@ public:
 	void handle_rpt(RCV_REPORT_STRUCTEx *rpt);
 	asio::io_service ioqueue;//io队列
 	HqCfg param;
+
+	//其实只是收盘作业 
 	HqLifeCycle _hq_infi;
+
+	//关闭当前文件
+	void close_current_file();
+	void load_exist_files();
 	bool load_cfg(pugi::xml_node &nodecfg);
 
 public:
