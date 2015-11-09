@@ -897,6 +897,8 @@ typedef struct tagRCV_PANKOU_STRUCTEx
 
 } RCV_PANKOU_STRUCTEx;
 
+
+#pragma warning(disable:4200)
 typedef struct tagRCV_WJFPANKOU
 {
 	WORD	m_wMarket;									// 股票市场类型　　　　　　　　　　 同通视规范定义

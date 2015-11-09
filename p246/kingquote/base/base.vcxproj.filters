@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="xml">
+      <UniqueIdentifier>{abfcc3c8-731c-41ca-8afb-9a24be565dc3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,9 +27,24 @@
     <ClInclude Include="hqdef.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="strutil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="BoostFile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="dtz.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StkDrv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Stockdrv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="StkDrv.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

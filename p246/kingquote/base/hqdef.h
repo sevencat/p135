@@ -103,7 +103,7 @@ public:
 	HqMinRecord *get_min_rec_by_idx(int stkidx)
 	{
 		char *pdata = (char *)this;
-		pdata + = sizeof(HqFileHdr) + reccount*sizeof(HqRecord);
+		pdata =pdata+ sizeof(HqFileHdr) + reccount*sizeof(HqRecord);
 		HqMinRecord *mindata = (HqMinRecord *)pdata;
 		return mindata + stkidx*mincount;
 	}

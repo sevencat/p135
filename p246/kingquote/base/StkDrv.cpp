@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "StkDrv.h"
 
 bool StkDrv::LoadDrv(const char *dllname)

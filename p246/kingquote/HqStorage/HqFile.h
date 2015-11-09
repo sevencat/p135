@@ -2,8 +2,8 @@
 #include "../base/hqdef.h"
 #include "int64map.h"
 #include "MemMapFile.h"
-#include "BoostFile.h"
-#include "Stockdrv.h"
+#include "../base/BoostFile.h"
+#include "../base/Stockdrv.h"
 
 class HqFile
 {
