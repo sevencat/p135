@@ -135,6 +135,7 @@
     <ClInclude Include="HqCfg.h" />
     <ClInclude Include="HqFile.h" />
     <ClInclude Include="HqFileMgr.h" />
+    <ClInclude Include="HqLifeCycle.h" />
     <ClInclude Include="int64map.h" />
     <ClInclude Include="MemMapFile.h" />
     <ClInclude Include="stdafx.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="HqCfg.cpp" />
     <ClCompile Include="HqFile.cpp" />
     <ClCompile Include="HqFileMgr.cpp" />
+    <ClCompile Include="HqLifeCycle.cpp" />
     <ClCompile Include="MemMapFile.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

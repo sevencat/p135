@@ -127,15 +127,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basic_repeating_timer_asio.h" />
     <ClInclude Include="BoostFile.h" />
     <ClInclude Include="dtz.h" />
     <ClInclude Include="hqdef.h" />
+    <ClInclude Include="pugiconfig.hpp" />
+    <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StkDrv.h" />
     <ClInclude Include="Stockdrv.h" />
     <ClInclude Include="strutil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="pugixml.cpp" />
     <ClCompile Include="StkDrv.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

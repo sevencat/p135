@@ -42,10 +42,22 @@
     <ClInclude Include="Stockdrv.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="pugiconfig.hpp">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="pugixml.hpp">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="basic_repeating_timer_asio.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StkDrv.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="pugixml.cpp">
+      <Filter>xml</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

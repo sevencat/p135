@@ -19,3 +19,9 @@ HqCfg::HqCfg()
 HqCfg::~HqCfg()
 {
 }
+
+bool HqCfg::load_cfg(pugi::xml_node& nodecfg)
+{
+
+	return true;
+}

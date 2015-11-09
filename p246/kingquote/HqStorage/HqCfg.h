@@ -1,5 +1,10 @@
 #pragma once
 
+namespace pugi
+{
+	class xml_node;
+}
+
 //市场的定义文件
 struct SubMarketTime
 {
@@ -98,5 +103,7 @@ public:
 	bool _userrpttime;//是否使用市场时间
 
 	std::vector<SubMarketTime> _mts;
+
+	bool load_cfg(pugi::xml_node &nodecfg);
 };
 
