@@ -20,6 +20,9 @@ class HqFile
 public:
 	HqFile();
 	~HqFile();
+	void shoupan_market();
+	void init_market(_datetime_t &dt);
+
 	static void set_default_dir(const std::string &rtdir, const std::string &datadir)
 	{
 		default_panhoudir = datadir;
@@ -30,6 +33,11 @@ public:
 	MemMapFile stk_file;//主文件
 	HqFileHdr *stk_hdr;//文件头部
 	BoostFile tick_file;//逐笔文件初始化用的
+	bool is_valid()
+	{
+		return stk_hdr != NULL;
+	}
+
 
 
 	std::string _name;
@@ -80,6 +88,15 @@ public:
 	bool load_cfg(pugi::xml_node &nodecfg);
 
 	int find_or_add(const char *symbol, const char *name, int preclose);
+
+	void log(const char* a_format, ...)
+	{
+		va_list va;
+		va_start(va, a_format);
+		vlog(a_format, va);
+		va_end(va);
+	}
+	void vlog(const char* a_format, va_list a_args);
 
 public:
 	void on_day_changed();

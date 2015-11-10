@@ -7,11 +7,16 @@
 #include <asio/placeholders.hpp>
 
 HqFile::HqFile()
+	:_hq_infi(*this)
 {
 }
 
 
 HqFile::~HqFile()
+{
+}
+
+void HqFile::shoupan_market()
 {
 }
 
@@ -36,6 +41,7 @@ bool HqFile::handle_stk_report_in_thread(std::vector<std::string> *newreports)
 
 void HqFile::close_current_file()
 {
+	stk_hdr = NULL;
 	stk_file.sync();
 	stk_file.close();
 }
@@ -266,6 +272,10 @@ int HqFile::find_or_add(const char* symbol, const char* name, int preclose)
 	stk_hdr->curstkcount++;
 	stk_map.AddToMap(key, curpos);
 	return curpos;
+}
+
+void HqFile::vlog(const char* a_format, va_list a_args)
+{
 }
 
 void HqFile::on_day_changed()

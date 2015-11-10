@@ -1596,6 +1596,7 @@ public:
 	}
 };
 
+#pragma warning(disable:4996)
 class _tzlist_t: public std::vector<TIMEZONE_INFO>
 {
 public:
