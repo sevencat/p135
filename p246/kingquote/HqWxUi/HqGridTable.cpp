@@ -2,6 +2,16 @@
 
 HqGridTable::HqGridTable()
 {
+	m_colLabels.push_back("代码");
+	m_colLabels.push_back("名称");
+	m_colLabels.push_back("昨收价");
+	m_colLabels.push_back("开盘价");
+	m_colLabels.push_back("最高价");
+	m_colLabels.push_back("最低价");
+	m_colLabels.push_back("最新价");
+	m_colLabels.push_back("成交量");
+	m_colLabels.push_back("成交金额");
+	m_colLabels.push_back("持仓量");
 }
 
 
@@ -11,12 +21,12 @@ HqGridTable::~HqGridTable()
 
 int HqGridTable::GetNumberRows()
 {
-	return 0;
+	return 2;
 }
 
 int HqGridTable::GetNumberCols()
 {
-	return 0;
+	return m_colLabels.size();
 }
 
 wxString HqGridTable::GetValue(int row, int col)

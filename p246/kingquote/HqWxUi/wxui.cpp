@@ -47,9 +47,8 @@ HqUiFrame::HqUiFrame()
 	m_logOld = wxLog::SetActiveTarget(logger);
 	wxLog::DisableTimestamp();
 
-	grid->CreateGrid(0, 0);
-	grid->AppendRows(100);
-	grid->AppendCols(100);
+	hqtbl = new HqGridTable();
+	grid->SetTable(hqtbl);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->Add(grid,1,wxEXPAND);

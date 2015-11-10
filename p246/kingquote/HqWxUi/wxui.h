@@ -3,6 +3,7 @@
 #include <wx/frame.h>
 #include <wx/grid.h>
 #include <stdint.h>
+#include "HqGridTable.h"
 
 // Define a new application type, each program should derive a class from wxApp
 class HqUiApp : public wxApp
@@ -33,6 +34,8 @@ public:
 	wxTextCtrl     *logWin;
 	wxLogTextCtrl  *logger;
 	wxLog *m_logOld;
+
+	HqGridTable *hqtbl;
 
 	wxDECLARE_EVENT_TABLE();
 
