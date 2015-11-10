@@ -25,6 +25,7 @@ HqUiFrame::HqUiFrame()
 	wxDefaultPosition,
 	wxDefaultSize)
 {
+	SetIcon(wxICON(IDI_ICONMAIN));
 	wxMenu *mktmenu = new wxMenu;
 	mktmenu->Append(ID_MKT_SH, wxT("上海股票"));
 	mktmenu->Append(ID_MKT_SZ, wxT("深圳股票"));

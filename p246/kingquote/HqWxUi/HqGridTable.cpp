@@ -21,7 +21,7 @@ HqGridTable::HqGridTable()
 	m_colLabels.push_back("最低价");
 	m_colLabels.push_back("最新价");
 	m_colLabels.push_back("成交量");
-	m_colLabels.push_back("金额(万元)");
+	m_colLabels.push_back("金额(元)");
 	m_colLabels.push_back("持仓量");
 }
 
@@ -75,6 +75,20 @@ static wxString from_value(int value, int divvalue = 1000)
 	return from_value(curvalue);
 }
 
+static wxString from_complex_value(double value)
+{
+	if (value<=10000)
+	{
+		return from_value(value);
+	}
+	value = value / 10000.0f;
+	if (value <= 10000)
+	{
+		return from_value(value)+"万";
+	}
+	return from_value(value/10000.0f) + "亿";
+}
+
 wxString HqGridTable::GetValue(int row, int col)
 {
 	if (m_hq == NULL)
@@ -102,9 +116,9 @@ wxString HqGridTable::GetValue(int row, int col)
 	case 6:
 		return from_value(currec.newpx);
 	case 7:
-		return from_value(currec.vol, 1);
+		return from_complex_value(currec.vol);
 	case 8:
-		return from_value(currec.money/10000);
+		return from_complex_value(currec.money);
 	}
 	return "";
 }
