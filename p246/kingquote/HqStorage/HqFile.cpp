@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "HqFile.h"
-
+#include <io.h>
 #include "../base/pugixml.hpp"
 #include "../base/dtz.h"
 #include "../base/strutil.h"
@@ -36,12 +36,41 @@ bool HqFile::handle_stk_report_in_thread(std::vector<std::string> *newreports)
 
 void HqFile::close_current_file()
 {
+	stk_file.sync();
+	stk_file.close();
+}
+
+void HqFile::build_stk_map()
+{
+	stk_map.DeleteMap();
+	for (int i = 0; i < stk_hdr->curstkcount;i++)
+	{
+		HqRecord &curstk = stk_hdr->rtrec[i];
+		stk_map.AddToMap(curstk.symbol, i);
+	}
 }
 
 void HqFile::load_exist_files()
 {
 	close_current_file();
 	//这里进行map文件
+	std::string curfilename = get_fullfilename();
+	if (_access(curfilename.c_str(), 0) == -1)
+	{
+		//没有找到，就退了
+		return;
+	}
+	//int ndate = _curtm.raw_date();
+	int32_t filesize = HqFileHdr::get_init_size(param._max_stockcount, param._max_mincount);
+	if(!stk_file.map(curfilename.c_str(),filesize))
+	{
+		return;
+	}
+	HqFileHdr *hdr = (HqFileHdr *)stk_file.addr();
+	if (hdr->hdrflag != HDRFLAG)
+		return;
+	stk_hdr = hdr;
+	build_stk_map();
 }
 
 bool HqFile::load_cfg(pugi::xml_node& nodecfg)
@@ -224,16 +253,60 @@ int HqFile::find_or_add(const char* symbol, const char* name, int preclose)
 	int curpos = stk_map.GetStockByMap(key);
 	if (curpos >= 0)
 		return curpos;
+
 	curpos = stk_hdr->curstkcount;
 	HqRecord &currecord = stk_hdr->rtrec[curpos];
 	strncpy(currecord.symbol, symbol, 6);
 	strncpy(currecord.name, name, 31);
 	currecord.preclosepx = preclose;
+	uint16_t stkid = param.get_type_by_code(std::string(symbol));
+	currecord.mktid = stkid;
+	currecord.idx = curpos;
+
 	stk_hdr->curstkcount++;
 	stk_map.AddToMap(key, curpos);
 	return curpos;
 }
 
+void HqFile::on_day_changed()
+{
+}
+
+void HqFile::handle_timer_init_and_shoupan()
+{
+	_datetime_t newlocaltm;
+	newlocaltm.from_local_timer(time(NULL) - _market_time_offset);
+	//减去偏移量，外盘要用的
+	if (newlocaltm.raw_date() != _curtm.raw_date())
+	{
+		//检查是否要收盘作业！！！
+		on_day_changed();
+	}
+	_curtm = newlocaltm;
+	_hq_infi.on_localdt_changed(newlocaltm);
+}
+
+void HqFile::handle_timer_refresh_boursetime()
+{
+	//if (!_status_init)
+	//	return;
+
+	//_datetime_t newlocaltm;
+	//newlocaltm.from_local_timer(time(NULL) - _market_time_offset);
+
+	////_datetime_t newlocaltm=_datetime_t::now()-_time_t((long)(_market_time_offset));
+	////减去偏移量，外盘要用的,如果不是今天的，就不管了。
+	//if (newlocaltm.raw_date() != _biInfo.m_lDate)
+	//{
+	//	return;
+	//}
+
+	//int timeoffset = get_min_offset(_last_hq_min / 60, _last_hq_min % 60);
+}
+
 void HqFile::handle_timer(const asio::error_code& e)
 {
+	handle_timer_init_and_shoupan();
+	handle_timer_refresh_boursetime();
+	stk_file.sync();//写下硬盘，保存起来。
 }

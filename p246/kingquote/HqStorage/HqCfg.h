@@ -74,6 +74,8 @@ public:
 	SubMarketDef _submarketfasts[16];
 	std::string _shortname;//短名称：如 上海证券
 
+	uint16_t _hsid;
+
 	uint32_t _max_mincount;//最大分钟数。
 	uint32_t _max_stockcount;//股票最大数
 
@@ -105,5 +107,7 @@ public:
 	std::vector<SubMarketTime> _mts;
 
 	bool load_cfg(pugi::xml_node &nodecfg);
+
+	uint16_t get_type_by_code(const std::string &strCode);
 };
 

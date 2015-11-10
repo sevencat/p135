@@ -13,6 +13,23 @@ typedef unsigned short HSMarketDataType;			  // 市场分类数据类型
 #	define SH_BOURSE			 0x0100   // 上海
 #	define SZ_BOURSE			 0x0200   // 深圳
 #	define SYSBK_BOURSE			 0x0400   // 系统板块
+#	define USERDEF_BOURSE		 0x0800   // 自定义（自选股或者自定义板块）
+#			define KIND_INDEX		 0x0000   // 指数 
+#			define KIND_STOCKA		 0x0001   // A股 
+#			define KIND_STOCKB		 0x0002   // B股 
+#			define KIND_BOND		 0x0003   // 债券
+#			define KIND_FUND		 0x0004   // 基金
+#			define KIND_THREEBOAD	 0x0005   // 三板
+#			define KIND_SMALLSTOCK	 0x0006   // 中小盘股
+#			define KIND_PLACE		 0x0007	  // 配售
+#			define KIND_LOF			 0x0008	  // LOF
+#			define KIND_ETF			 0x0009   // ETF
+#			define KIND_QuanZhen	 0x000A   // 权证
+
+#			define KIND_OtherIndex	 0x000E   // 第三方行情分类，如:中信指数
+
+#			define SC_Others		 0x000F   // 其他 0x09
+#			define KIND_USERDEFINE	 0x0010   // 自定义指数
 
 
 // 港股市场

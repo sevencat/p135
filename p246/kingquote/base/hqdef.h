@@ -32,7 +32,7 @@ class HqRecord
 {
 public:
 	int16_t idx;//序号
-	int16_t mktid;//市场序号,可能会有子市场号
+	uint16_t mktid;//市场序号,可能会有子市场号
 	int32_t lasttime;//最后时间，这里是减掉1990的时间
 	char symbol[8];//实际上只用到6
 	char name[32];//实际上只想用到24
@@ -66,7 +66,7 @@ public:
 	int32_t nouse;//未使用
 };
 
-
+#define HDRFLAG 0x00ffffff
 //头部信息，可以设定为
 //头部  reccount条HqRecord  reccount*mincount条HqMinRecord
 class HqFileHdr

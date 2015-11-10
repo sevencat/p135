@@ -44,6 +44,13 @@ public:
 	static std::string default_panhoudir;
 	static std::string default_rtdir;
 
+	std::string get_fullfilename()
+	{
+		char filename[256];
+		sprintf(filename, "%s\\%u.dat",(uint32_t)_hsid);
+		return filename;
+	}
+
 	void handle_rpt(RCV_REPORT_STRUCTEx *rpt);
 
 	bool handle_stk_report_other_thread(std::vector<std::string> *newreports)
@@ -68,12 +75,16 @@ public:
 
 	//关闭当前文件
 	void close_current_file();
+	void build_stk_map();
 	void load_exist_files();
 	bool load_cfg(pugi::xml_node &nodecfg);
 
 	int find_or_add(const char *symbol, const char *name, int preclose);
 
 public:
+	void on_day_changed();
+	void handle_timer_init_and_shoupan();
+	void handle_timer_refresh_boursetime();
 	void handle_timer(const asio::error_code& e);
 };
 
