@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "HqSrcMgr.h"
 #include "../base/StkDrv.h"
+#include "HqFileMgr.h"
+#include <map>
 
 HqSrcMgr gHqSrcMgr;
 
@@ -37,12 +39,29 @@ void HqSrcMgr::on_recv_report(RCV_DATA *pHeader)
 {
 	int totallen = 0;
 	char *reportheader = (char *)pHeader->m_pReport;
+	std::map<uint32_t, std::vector<std::string> > reportmap;
 	for (int i = 0; i < pHeader->m_nPacketNum; i++)
 	{
 		RCV_REPORT_STRUCTEx &curbuf = *(RCV_REPORT_STRUCTEx *)reportheader;
-		//int hqtype = m_cm.transfer_code(curbuf.m_wMarket, curbuf.m_szLabel);
-		totallen += curbuf.m_cbSize;
+		int hqtype = m_cm.transfer_code(curbuf.m_wMarket, curbuf.m_szLabel);
+		if ((hqtype > 0) && (hqtype <= 5))
+		{
+			uint32_t hsid = curbuf.m_wMarket;
+			hsid = hsid - hsid % 16;
+			reportmap[hsid].push_back(std::string((const char *)&curbuf, curbuf.m_cbSize));
+		}
 		reportheader += curbuf.m_cbSize;
+	}
+
+	for (std::map<uint32_t, std::vector<std::string> >::iterator it = reportmap.begin(); it != reportmap.end(); it++)
+	{
+		uint32_t hsid = it->first;
+		HqFile *pstorage = gHqFileMgr.get_by_hsid(hsid);
+		if (pstorage == NULL)
+			continue;
+		std::vector<std::string> *newreports = new std::vector<std::string>();
+		newreports->swap(it->second);
+		pstorage->handle_stk_report_other_thread(newreports);
 	}
 }
 

@@ -51,6 +51,9 @@
     <ClInclude Include="basic_repeating_timer_asio.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="hsmarketdef.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="StkDrv.cpp">

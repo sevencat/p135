@@ -132,6 +132,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="codemap.h" />
     <ClInclude Include="HqCfg.h" />
     <ClInclude Include="HqFile.h" />
     <ClInclude Include="HqFileMgr.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="codemap.cpp" />
     <ClCompile Include="HqCfg.cpp" />
     <ClCompile Include="HqFile.cpp" />
     <ClCompile Include="HqFileMgr.cpp" />

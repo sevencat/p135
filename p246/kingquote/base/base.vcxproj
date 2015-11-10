@@ -131,6 +131,7 @@
     <ClInclude Include="BoostFile.h" />
     <ClInclude Include="dtz.h" />
     <ClInclude Include="hqdef.h" />
+    <ClInclude Include="hsmarketdef.h" />
     <ClInclude Include="pugiconfig.hpp" />
     <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="stdafx.h" />

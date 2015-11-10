@@ -25,15 +25,15 @@ public:
 		return true;
 	}
 
-	bool AddToMap(uint16_t mktid,const char *symbol,int posotion)
+	bool AddToMap(const char *symbol,int posotion)
 	{
-		uint64_t curkey = KeyToInt64(symbol, mktid);
+		uint64_t curkey = KeyToInt64(symbol);
 		return AddToMap(curkey, posotion);
 	}
 
-	int GetPosition(uint16_t mktid, const char *symbol)
+	int GetPosition(const char *symbol)
 	{
-		uint64_t curkey = KeyToInt64(symbol, mktid);
+		uint64_t curkey = KeyToInt64(symbol);
 		return GetStockByMap(curkey);
 	}
 
@@ -44,6 +44,12 @@ public:
 			return false;
 		m_mapPosition.erase(it);
 		return true;
+	}
+
+	bool DeleteFromMap(const char *symbol)
+	{
+		uint64_t curkey = KeyToInt64(symbol);
+		return DeleteFromMap(curkey);
 	}
 
 	void  DeleteMap()
@@ -60,30 +66,20 @@ public:
 		return it->second;
 	}
 
-	
-
 public:
 
-	static uint64_t KeyToInt64(const char *key,int16_t mkt)
+	static uint64_t KeyToInt64(const char *key)
 	{
 		uint64_t result=0;
 		char *presult=(char *)&result;
-		strncpy(presult+2,key,6);
-		//现在有没有四位的？应该没有了，除了2a01，判断一下也没事。
-		if(presult[7]==' ')
+		for (int i = 0; i < 6;i++)
 		{
-			presult[7]=0;
-			if (presult[6] == ' ')
-			{
-				presult[6] = 0;
-				if (presult[5] == ' ')
-				{
-					presult[5] = 0;
-				}
-			}
+			//过滤空格
+			if (key[i] == 0)
+				break;
+			if (key[i] == ' ')
+				break;
 		}
-		presult[0] = mkt % 256;
-		presult[1] = mkt / 256;
 		return result;
 	}
 };

@@ -2,6 +2,7 @@
 #include "HqFileMgr.h"
 #include "../base/pugixml.hpp"
 
+HqFileMgr gHqFileMgr;
 
 HqFileMgr::HqFileMgr()
 {

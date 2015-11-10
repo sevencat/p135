@@ -78,6 +78,7 @@ public:
 	int32_t reccount;//总数量
 	int32_t mincount;//分钟线数量
 	int32_t ticklastpos;//最后一个tick块数据
+	int32_t curstkcount;//当前股票数量
 	HqRecord rtrec[0];
 	//HqMinRecord minrec[0];
 

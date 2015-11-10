@@ -17,8 +17,21 @@ HqFile::~HqFile()
 
 void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 {
-	//1、实时，2、分钟，3、tick数据,可以先写实时数据
-	return;
+	char symbolbuf[8] = { 0 };
+	strncpy(symbolbuf, rpt->m_szLabel, 6);
+	uint64_t key = KingInt64ToIntMap::KeyToInt64(symbolbuf);
+}
+
+bool HqFile::handle_stk_report_in_thread(std::vector<std::string> *newreports)
+{
+	for (int i = 0; i < newreports->size(); i++)
+	{
+		std::string &curstr = (*newreports)[i];
+		RCV_REPORT_STRUCTEx &report = *(RCV_REPORT_STRUCTEx *)curstr.c_str();
+		handle_rpt(&report);
+	}
+	delete newreports;
+	return true;
 }
 
 void HqFile::close_current_file()
@@ -203,6 +216,22 @@ bool HqFile::load_cfg(pugi::xml_node& nodecfg)
 	load_exist_files();
 
 	return true;
+}
+
+int HqFile::find_or_add(const char* symbol, const char* name, int preclose)
+{
+	uint64_t key = KingInt64ToIntMap::KeyToInt64(symbol);
+	int curpos = stk_map.GetStockByMap(key);
+	if (curpos >= 0)
+		return curpos;
+	curpos = stk_hdr->curstkcount;
+	HqRecord &currecord = stk_hdr->rtrec[curpos];
+	strncpy(currecord.symbol, symbol, 6);
+	strncpy(currecord.name, name, 31);
+	currecord.preclosepx = preclose;
+	stk_hdr->curstkcount++;
+	stk_map.AddToMap(key, curpos);
+	return curpos;
 }
 
 void HqFile::handle_timer(const asio::error_code& e)

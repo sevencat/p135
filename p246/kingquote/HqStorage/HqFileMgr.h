@@ -27,3 +27,4 @@ protected:
 	HqFileMap stk_file_map;
 };
 
+extern HqFileMgr gHqFileMgr;
