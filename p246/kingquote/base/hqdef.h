@@ -75,7 +75,7 @@ public:
 	int32_t hdrflag;//头部=0x00ffffff
 	int32_t dt;//当前日期
 	int32_t stkchgtime;//股票数量变化时间
-	int32_t reccount;//总数量
+	int32_t maxstkcount;//总数量
 	int32_t mincount;//分钟线数量
 	int32_t ticklastpos;//最后一个tick块数据
 	int32_t curstkcount;//当前股票数量
@@ -98,13 +98,13 @@ public:
 
 	int32_t get_size()
 	{
-		return get_hdr_size(reccount, mincount);
+		return get_hdr_size(maxstkcount, mincount);
 	}
 
 	HqMinRecord *get_min_rec_by_idx(int stkidx)
 	{
 		char *pdata = (char *)this;
-		pdata =pdata+ sizeof(HqFileHdr) + reccount*sizeof(HqRecord);
+		pdata =pdata+ sizeof(HqFileHdr) + maxstkcount*sizeof(HqRecord);
 		HqMinRecord *mindata = (HqMinRecord *)pdata;
 		return mindata + stkidx*mincount;
 	}

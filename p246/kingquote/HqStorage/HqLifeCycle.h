@@ -14,7 +14,7 @@ class HqLifeCycle
 public:
 	HqLifeCycle(HqFile &hf);
 	~HqLifeCycle();
-	void load_cfg(pugi::xml_node xml_nodes);
+	void load_cfg(pugi::xml_node &curnode);
 	void on_localdt_changed(_datetime_t &ldt);
 	bool need_init(_datetime_t &td);
 

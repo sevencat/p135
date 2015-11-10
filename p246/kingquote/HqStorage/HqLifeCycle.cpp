@@ -13,8 +13,23 @@ HqLifeCycle::~HqLifeCycle()
 {
 }
 
-void HqLifeCycle::load_cfg(pugi::xml_node xml_nodes)
+void HqLifeCycle::load_cfg(pugi::xml_node &curnode)
 {
+	_init_time = atoi(curnode.child("inittime").child_value());
+	_isprev = atoi(curnode.child("isprev").child_value());
+
+	_shoupan_time = atoi(curnode.child("shoupantime").child_value());
+	std::string strautoinfi = curnode.child("autoinfi").child_value();
+	_auto_infi = (strautoinfi == "true");
+	std::string strtemp = curnode.child("userconfsymbol").child_value();
+	_init_use_conf_symbols = (strtemp == "true");
+
+	std::string strweek = curnode.child("workweedday").child_value();
+	if (strweek.size() == 7)
+	{
+		for (int i = 0; i < 7; i++)
+			_init_week[i] = (strweek[i] != '0');
+	}
 }
 
 bool HqLifeCycle::need_init(_datetime_t &td)

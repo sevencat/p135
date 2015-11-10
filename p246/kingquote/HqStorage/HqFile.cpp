@@ -20,6 +20,33 @@ void HqFile::shoupan_market()
 {
 }
 
+void HqFile::init_market(_datetime_t& dt)
+{
+	//清除快查接口
+	stk_map.DeleteMap();
+	//先检查收盘
+	shoupan_market();
+	//再关闭文件
+	close_current_file();
+	
+	int rawdt = dt.raw_date();
+
+
+	std::string curfilename = get_fullfilename();
+	int32_t filesize = HqFileHdr::get_init_size(param._max_stockcount, param._max_mincount);
+	if (!stk_file.map(curfilename.c_str(), filesize))
+	{
+		return;
+	}
+	HqFileHdr *hdr = (HqFileHdr *)stk_file.addr();
+	hdr->hdrflag = HDRFLAG;
+	hdr->dt = rawdt;
+	hdr->stkchgtime = 0;
+	hdr->maxstkcount = param._max_stockcount;
+	hdr->mincount = param._max_mincount;
+	stk_hdr = hdr;
+}
+
 void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 {
 	char symbolbuf[8] = { 0 };

@@ -23,6 +23,14 @@ public:
 	void shoupan_market();
 	void init_market(_datetime_t &dt);
 
+	void init_market()
+	{
+		log("收到初始化命令，开始初始化");
+		_datetime_t newlocaltm;
+		newlocaltm.from_local_timer(time(NULL) - _market_time_offset);
+		return init_market(newlocaltm);
+	}
+
 	static void set_default_dir(const std::string &rtdir, const std::string &datadir)
 	{
 		default_panhoudir = datadir;
