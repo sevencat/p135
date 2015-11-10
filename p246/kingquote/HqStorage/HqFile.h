@@ -20,6 +20,11 @@ class HqFile
 public:
 	HqFile();
 	~HqFile();
+	static void set_default_dir(const std::string &rtdir, const std::string &datadir)
+	{
+		default_panhoudir = datadir;
+		default_rtdir = rtdir;
+	}
 	KingInt64ToIntMap stk_map;//股票快查表!!!当然是hash了
 	MemMapFile stk_file;//主文件
 	HqFileHdr *stk_hdr;//文件头部
