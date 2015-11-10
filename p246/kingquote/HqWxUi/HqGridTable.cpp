@@ -1,7 +1,13 @@
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <winsock2.h>
 #include "HqGridTable.h"
+#include "../HqStorage/HqFile.h"
 
 HqGridTable::HqGridTable()
 {
+	m_hq = NULL;
+
 	m_colLabels.push_back("代码");
 	m_colLabels.push_back("名称");
 	m_colLabels.push_back("昨收价");
@@ -21,7 +27,12 @@ HqGridTable::~HqGridTable()
 
 int HqGridTable::GetNumberRows()
 {
-	return 2;
+	if (m_hq == NULL)
+		return 0;
+	HqFileHdr *hdr = m_hq->stk_hdr;
+	if (hdr == NULL)
+		return 0;
+	return hdr->reccount;
 }
 
 int HqGridTable::GetNumberCols()

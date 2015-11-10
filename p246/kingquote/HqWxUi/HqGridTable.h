@@ -1,6 +1,8 @@
 #pragma once
 #include <wx/generic/grid.h>
 
+class HqFile;
+
 class HqGridTable : public wxGridTableBase
 {
 public:
@@ -43,4 +45,6 @@ private:
 	//
 	wxArrayString     m_rowLabels;
 	wxArrayString     m_colLabels;
+
+	HqFile *m_hq;
 };

@@ -12,6 +12,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libhttpd", "libhttpd\libhttpd.vcxproj", "{43672E0E-0BF2-434E-89B5-DDB5DD803D60}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HqWxUi", "HqWxUi\HqWxUi.vcxproj", "{68808A64-FC41-4D4F-B9D0-FF93A3A1F2ED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C03ACBA6-374E-452B-B806-98213ED6A3F8} = {C03ACBA6-374E-452B-B806-98213ED6A3F8}
+		{8602DDC7-0D24-4D23-B478-DCCDFE98F5A4} = {8602DDC7-0D24-4D23-B478-DCCDFE98F5A4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
