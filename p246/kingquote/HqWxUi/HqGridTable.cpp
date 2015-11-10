@@ -1,11 +1,16 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <winsock2.h>
+#include "stdafx.h"
 #include "HqGridTable.h"
 #include "../HqStorage/HqFile.h"
 
 HqGridTable::HqGridTable()
 {
+	m_attrForOddRows = new wxGridCellAttr;
+	m_attrForOddRows->SetBackgroundColour(*wxLIGHT_GREY);
+	m_attrForOddRows->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTER);
+
+	m_defaultCellAttr = new wxGridCellAttr();
+	m_defaultCellAttr->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTER);
+
 	m_hq = NULL;
 
 	m_colLabels.push_back("代码");
@@ -16,13 +21,32 @@ HqGridTable::HqGridTable()
 	m_colLabels.push_back("最低价");
 	m_colLabels.push_back("最新价");
 	m_colLabels.push_back("成交量");
-	m_colLabels.push_back("成交金额");
+	m_colLabels.push_back("金额(万元)");
 	m_colLabels.push_back("持仓量");
 }
 
 
 HqGridTable::~HqGridTable()
 {
+}
+
+wxGridCellAttr* HqGridTable::GetAttr(int row, int col, wxGridCellAttr::wxAttrKind kind)
+{
+	//if (kind != wxGridCellAttr::Cell)
+	//{
+	//	return wxGridTableBase::GetAttr(row, col, kind);
+	//}
+	wxGridCellAttr *attr = NULL;
+	if (row % 2)
+	{
+		attr = m_attrForOddRows;
+	}
+	else
+	{
+		attr = m_defaultCellAttr;
+	}
+	attr->IncRef();
+	return attr;
 }
 
 int HqGridTable::GetNumberRows()
@@ -40,12 +64,12 @@ int HqGridTable::GetNumberCols()
 	return m_colLabels.size();
 }
 
-wxString from_value(double value)
+static wxString from_value(double value)
 {
 	return wxString::Format("%.2f", value);
 }
 
-wxString from_value(int value,int divvalue=1000)
+static wxString from_value(int value, int divvalue = 1000)
 {
 	double curvalue = value / (double)divvalue;
 	return from_value(curvalue);
@@ -80,7 +104,7 @@ wxString HqGridTable::GetValue(int row, int col)
 	case 7:
 		return from_value(currec.vol, 1);
 	case 8:
-		return from_value(currec.money);
+		return from_value(currec.money/10000);
 	}
 	return "";
 }

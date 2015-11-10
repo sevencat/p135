@@ -1,8 +1,5 @@
 #pragma once
-#include <wx/app.h>
-#include <wx/frame.h>
-#include <wx/grid.h>
-#include <stdint.h>
+
 #include "HqGridTable.h"
 
 // Define a new application type, each program should derive a class from wxApp
@@ -39,16 +36,13 @@ public:
 
 	wxDECLARE_EVENT_TABLE();
 
-
 	void OnMktSh(wxCommandEvent&)
 	{
 		switch_to_mkt(0x1100);
 	}
-
 	void OnMktSz(wxCommandEvent&)
 	{
 		switch_to_mkt(0x1200);
 	}
-
 	void switch_to_mkt(uint32_t mktid);
 };

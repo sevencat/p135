@@ -1,10 +1,5 @@
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <winsock2.h>
+#include "stdafx.h"
 #include "wxui.h"
-#include <wx/menu.h>
-#include <wx/textctrl.h>
-#include <wx/sizer.h>
 
 #include "../HqStorage/HqFileMgr.h"
 #include "../HqStorage/HqSrcMgr.h"
@@ -38,10 +33,18 @@ HqUiFrame::HqUiFrame()
 	menuBar->Append(mktmenu, wxT("市场选择"));
 	SetMenuBar(menuBar);
 
+	CreateStatusBar(2);
+	SetStatusText("Welcome to King's Stock");
+
 	grid = new wxGrid(this,
 		wxID_ANY,
 		wxPoint(0, 0),
-		wxSize(400, 300));
+		wxSize(850, 400));
+	grid->HideRowLabels();
+	grid->SetColLabelSize(24);
+	grid->SetDefaultRowSize(24);
+
+
 	int gridW = 600, gridH = 300;
 	int logW = gridW, logH = 100;
 
@@ -50,11 +53,13 @@ HqUiFrame::HqUiFrame()
 		wxEmptyString,
 		wxPoint(0, gridH + 20),
 		wxSize(logW, logH),
-		wxTE_MULTILINE);
+		wxTE_MULTILINE | wxTE_READONLY);
 
 	logger = new wxLogTextCtrl(logWin);
 	m_logOld = wxLog::SetActiveTarget(logger);
 	wxLog::DisableTimestamp();
+
+	wxLogMessage("程序已启动");
 
 	hqtbl = new HqGridTable();
 	grid->SetTable(hqtbl);
@@ -81,5 +86,6 @@ void HqUiFrame::switch_to_mkt(uint32_t mktid)
 {
 	HqFile *curfile = gHqFileMgr.get_by_hsid(mktid);
 	hqtbl->sethq(curfile);
-	grid->SetTable(hqtbl, false);
+	grid->SetTable(hqtbl, false, wxGrid::wxGridSelectRows);
+	grid->Refresh();
 }

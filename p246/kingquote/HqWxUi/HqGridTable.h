@@ -15,6 +15,8 @@ public:
 	}
 
 	// these are pure virtual in wxGridTableBase
+
+	virtual wxGridCellAttr *GetAttr(int row, int col,wxGridCellAttr::wxAttrKind  kind);
 	//
 	virtual int GetNumberRows();
 	virtual int GetNumberCols();
@@ -52,4 +54,6 @@ private:
 	wxArrayString     m_colLabels;
 
 	HqFile *m_hq;
+	wxGridCellAttr* m_attrForOddRows;
+	wxGridCellAttr* m_defaultCellAttr;
 };
