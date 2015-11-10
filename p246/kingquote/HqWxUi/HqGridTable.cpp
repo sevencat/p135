@@ -32,7 +32,7 @@ int HqGridTable::GetNumberRows()
 	HqFileHdr *hdr = m_hq->stk_hdr;
 	if (hdr == NULL)
 		return 0;
-	return hdr->reccount;
+	return hdr->curstkcount;
 }
 
 int HqGridTable::GetNumberCols()
@@ -40,8 +40,48 @@ int HqGridTable::GetNumberCols()
 	return m_colLabels.size();
 }
 
+wxString from_value(double value)
+{
+	return wxString::Format("%.2f", value);
+}
+
+wxString from_value(int value,int divvalue=1000)
+{
+	double curvalue = value / (double)divvalue;
+	return from_value(curvalue);
+}
+
 wxString HqGridTable::GetValue(int row, int col)
 {
+	if (m_hq == NULL)
+		return "";
+	HqFileHdr *hdr = m_hq->stk_hdr;
+	if (hdr == NULL)
+		return "";
+	if (row >= hdr->curstkcount)
+		return "";
+	HqRecord &currec = hdr->rtrec[row];
+	switch (col)
+	{
+	case 0:
+		return currec.symbol;
+	case 1:
+		return currec.name;
+	case 2:
+		return from_value(currec.preclosepx);
+	case 3:
+		return from_value(currec.openpx);
+	case 4:
+		return from_value(currec.highpx);
+	case 5:
+		return from_value(currec.lowpx);
+	case 6:
+		return from_value(currec.newpx);
+	case 7:
+		return from_value(currec.vol, 1);
+	case 8:
+		return from_value(currec.money);
+	}
 	return "";
 }
 

@@ -42,16 +42,13 @@ public:
 
 	void OnMktSh(wxCommandEvent&)
 	{
-		
+		switch_to_mkt(0x1100);
 	}
 
 	void OnMktSz(wxCommandEvent&)
 	{
-		
+		switch_to_mkt(0x1200);
 	}
 
-	void switch_to_mkt(uint32_t mktid)
-	{
-		
-	}
+	void switch_to_mkt(uint32_t mktid);
 };

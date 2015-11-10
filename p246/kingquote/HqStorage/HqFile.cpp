@@ -6,6 +6,9 @@
 #include "../base/strutil.h"
 #include <asio/placeholders.hpp>
 
+std::string HqFile::default_panhoudir;
+std::string HqFile::default_rtdir;
+
 HqFile::HqFile()
 	:_hq_infi(*this)
 {
@@ -49,18 +52,30 @@ void HqFile::init_market(_datetime_t& dt)
 
 void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 {
-	char symbolbuf[8] = { 0 };
-	strncpy(symbolbuf, rpt->m_szLabel, 6);
-	uint64_t key = KingInt64ToIntMap::KeyToInt64(symbolbuf);
+	int preclose = multifloat(rpt->m_fLastClose);
+	int curpos = find_or_add(rpt->m_szLabel, rpt->m_szName, preclose);
+	if (curpos < 0)
+		return;
+	HqRecord &curstk = stk_hdr->rtrec[curpos];
+	curstk.preclosepx = preclose;
+	curstk.openpx = multifloat(rpt->m_fOpen);
+	curstk.highpx = multifloat(rpt->m_fHigh);
+	curstk.lowpx = multifloat(rpt->m_fLow);
+	curstk.newpx = multifloat(rpt->m_fNewPrice);
+	curstk.vol = rpt->m_fVolume;
+	curstk.money = rpt->m_fAmount;
 }
 
 bool HqFile::handle_stk_report_in_thread(std::vector<std::string> *newreports)
 {
-	for (int i = 0; i < newreports->size(); i++)
+	if (stk_hdr != NULL)
 	{
-		std::string &curstr = (*newreports)[i];
-		RCV_REPORT_STRUCTEx &report = *(RCV_REPORT_STRUCTEx *)curstr.c_str();
-		handle_rpt(&report);
+		for (int i = 0; i < newreports->size(); i++)
+		{
+			std::string &curstr = (*newreports)[i];
+			RCV_REPORT_STRUCTEx &report = *(RCV_REPORT_STRUCTEx *)curstr.c_str();
+			handle_rpt(&report);
+		}
 	}
 	delete newreports;
 	return true;
@@ -215,26 +230,6 @@ bool HqFile::load_cfg(pugi::xml_node& nodecfg)
 		curmd._lClientDecimal = atoi(node_submarket.child("clientradix").child_value());
 		curmd._codescope = StrUtil::split(node_submarket.child("codeinclude").child_value(), ",", 64);
 		curmd._str_notcode = node_submarket.child("codeexclude").child_value();
-
-		static int timestrlen = strlen("09:30-11:30");
-
-		int shoupantime = 60 * (_hq_infi._shoupan_time / 100) + (_hq_infi._shoupan_time % 100);
-		for (pugi::xml_node node_time = node_submarket.child("openclose"); node_time; node_time = node_time.next_sibling("openclose"))
-		{
-			std::string strtime = node_time.child_value();
-			if (strtime.size() != timestrlen)
-				continue;
-			SubMarketTime cursubtime;
-			cursubtime._open = 60 * atoi(strtime.c_str()) + atoi(&strtime[3]);
-			cursubtime._close = 60 * atoi(&strtime[6]) + atoi(&strtime[9]);
-			if (cursubtime._open > shoupantime)
-			{
-				//ºı»•3600
-				cursubtime._open -= 24 * 60;
-				cursubtime._close -= 24 * 60;
-			}
-			curmd._mts.push_back(cursubtime);
-		}
 		param._submarketdefs.push_back(curmd);
 		param._submarketfasts[curmd._codetype % 16] = curmd;
 	}

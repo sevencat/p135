@@ -88,6 +88,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="wxui.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base\base.vcxproj">
+      <Project>{c03acba6-374e-452b-b806-98213ed6a3f8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\HqStorage\HqStorage.vcxproj">
+      <Project>{8602ddc7-0d24-4d23-b478-dccdfe98f5a4}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

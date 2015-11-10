@@ -1,19 +1,28 @@
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#include <winsock2.h>
 #include "wxui.h"
 #include <wx/menu.h>
 #include <wx/textctrl.h>
 #include <wx/sizer.h>
+
+#include "../HqStorage/HqFileMgr.h"
+#include "../HqStorage/HqSrcMgr.h"
 
 bool HqUiApp::OnInit()
 {
 	HqUiFrame *frame = new HqUiFrame();
 	frame->Center();
 	frame->Show(true);
+	//这个地方开始初始化
+
+
 	return true;
 }
 
 wxBEGIN_EVENT_TABLE(HqUiFrame, wxFrame)
 	EVT_MENU(ID_MKT_SH, HqUiFrame::OnMktSh)
-	EVT_MENU(ID_MKT_SH, HqUiFrame::OnMktSz)
+	EVT_MENU(ID_MKT_SZ, HqUiFrame::OnMktSz)
 wxEND_EVENT_TABLE()
 
 HqUiFrame::HqUiFrame()
@@ -56,8 +65,21 @@ HqUiFrame::HqUiFrame()
 
 	SetSizerAndFit(topSizer);
 	Centre();
+
+
+	//这里开始初始化
+	gHqFileMgr.load_cfg("E:\\svn\\github\\P135\\p246\\kingquote\\hq\\cfg\\",
+		"E:\\svn\\github\\P135\\p246\\kingquote\\hq\\","E:\\svn\\github\\P135\\p246\\kingquote\\hq\\data\\");
+	gHqSrcMgr.start_stk_dll("E:\\projects\\wjfgp\\StockDrv.dll");
 }
 
 HqUiFrame::~HqUiFrame()
 {
+}
+
+void HqUiFrame::switch_to_mkt(uint32_t mktid)
+{
+	HqFile *curfile = gHqFileMgr.get_by_hsid(mktid);
+	hqtbl->sethq(curfile);
+	grid->SetTable(hqtbl, false);
 }

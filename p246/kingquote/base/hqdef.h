@@ -120,3 +120,13 @@ public:
 
 #pragma pack(pop)
 //10240+4096
+
+
+#define MINFLOATVALUE 0.00000000001
+
+inline long multifloat(float value, int multiint = 1000)
+{
+	double xvalue = value;
+	xvalue *= multiint;
+	return floor(xvalue + 0.5);
+}

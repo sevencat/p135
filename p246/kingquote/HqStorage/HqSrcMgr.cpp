@@ -31,7 +31,9 @@ void HqSrcMgr::start_stk_dll(const char* dllpath)
 		RegisterClassEx(&wndclass);
 		HWND stk_wnd = CreateWindow(STKDRVWNDNAME, STKDRVWNDNAME, 0, 0, 0, 0, 0, 0, 0, 0, GetModuleHandle(0));
 		::SetWindowLong(stk_wnd, GWL_USERDATA, (LONG)this);
+		stk_drv->Stock_Init(stk_wnd, Gp_Msg_StkData, RCV_WORK_SENDMSG);
 	}
+	
 }
 
 
@@ -50,6 +52,10 @@ void HqSrcMgr::on_recv_report(RCV_DATA *pHeader)
 			hsid = hsid - hsid % 16;
 			reportmap[hsid].push_back(std::string((const char *)&curbuf, curbuf.m_cbSize));
 		}
+		else
+		{
+			int xxx = 1;
+		}
 		reportheader += curbuf.m_cbSize;
 	}
 
@@ -63,6 +69,10 @@ void HqSrcMgr::on_recv_report(RCV_DATA *pHeader)
 		newreports->swap(it->second);
 		pstorage->handle_stk_report_other_thread(newreports);
 	}
+}
+
+void HqSrcMgr::on_recv_file(RCV_DATA* tag_rcv_data)
+{
 }
 
 LRESULT CALLBACK StkWindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

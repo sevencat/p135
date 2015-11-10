@@ -63,7 +63,7 @@ public:
 	std::string get_fullfilename()
 	{
 		char filename[256];
-		sprintf(filename, "%s\\%u.dat",(uint32_t)_hsid);
+		sprintf(filename, "%s\\%u.dat", _rt_dir.c_str(),(uint32_t)_hsid);
 		return filename;
 	}
 

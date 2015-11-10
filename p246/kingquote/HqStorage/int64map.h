@@ -79,6 +79,7 @@ public:
 				break;
 			if (key[i] == ' ')
 				break;
+			presult[i] = key[i];
 		}
 		return result;
 	}

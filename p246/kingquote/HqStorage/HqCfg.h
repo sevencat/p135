@@ -55,7 +55,6 @@ public:
 	std::string	_name;//股票名称	
 	std::vector<std::string> _codescope;//包含的股票
 	std::string	_str_notcode;  // 不包含的代码
-	std::vector<SubMarketTime> _mts;
 
 	long _client_price_unit;
 	long _send_price_unit;

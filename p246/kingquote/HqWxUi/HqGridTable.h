@@ -9,6 +9,11 @@ public:
 	HqGridTable();
 	~HqGridTable();
 
+	void sethq(HqFile *hf)
+	{
+		m_hq = hf;
+	}
+
 	// these are pure virtual in wxGridTableBase
 	//
 	virtual int GetNumberRows();
