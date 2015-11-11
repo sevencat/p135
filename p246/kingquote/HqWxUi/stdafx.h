@@ -27,6 +27,12 @@
 #include <wx/app.h>
 #include <wx/frame.h>
 
+#include <asio/placeholders.hpp>
+#include <asio/io_service.hpp>
+#include "../base/basic_repeating_timer_asio.h"
+#include "../base/pugixml.hpp"
+#include "../base/dtz.h"
+#include "../base/strutil.h"
 #include "../base/hqdef.h"
 
 #undef min

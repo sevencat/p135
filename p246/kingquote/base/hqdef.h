@@ -34,6 +34,8 @@ public:
 	int16_t idx;//序号
 	uint16_t mktid;//市场序号,可能会有子市场号
 	int32_t lasttime;//最后时间，这里是减掉1990的时间
+	int16_t curminpos;//当前最新分钟线
+	int16_t nouse;//没有用
 	char symbol[8];//实际上只用到6
 	char name[32];//实际上只想用到24
 	int32_t preclosepx;//前收盘价,初期可以统一用这个

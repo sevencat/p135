@@ -93,6 +93,8 @@ void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 	{
 		curstk.lasttime = rpt->m_time;
 	}
+	if (curstk.curminpos < curoffset)
+		curstk.curminpos = curoffset;
 }
 
 
