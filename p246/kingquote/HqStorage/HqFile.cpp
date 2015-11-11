@@ -1,13 +1,10 @@
 #include "stdafx.h"
 #include "HqFile.h"
-#include <io.h>
-#include "../base/pugixml.hpp"
-#include "../base/dtz.h"
-#include "../base/strutil.h"
-#include <asio/placeholders.hpp>
+
 
 std::string HqFile::default_panhoudir;
 std::string HqFile::default_rtdir;
+_tzinfo_t globaltz = _tzinfo_t::china();
 
 HqFile::HqFile()
 	:_hq_infi(*this)
@@ -64,6 +61,72 @@ void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 	curstk.newpx = multifloat(rpt->m_fNewPrice);
 	curstk.vol = rpt->m_fVolume;
 	curstk.money = rpt->m_fAmount;
+
+	//下面来更新分钟线
+	_datetime_t utcdt;
+	utcdt.from_gmt_timer((int64_t)rpt->m_time - _market_time_offset);
+	_datetime_t localdt = globaltz.to_local(utcdt);
+	int curoffset = get_min_offset(localdt.hour(), localdt.min());
+	//取得分钟线
+
+	HqMinRecord *minrec = stk_hdr->get_min_rec_by_idx(curpos);
+	HqMinRecord &curminrec = minrec[curoffset];
+	if (curminrec.openpx == 0)
+		curminrec.openpx = curstk.newpx;
+	if (curminrec.newpx == 0)
+		curminrec.newpx = curstk.newpx;
+	if (curminrec.highpx == 0)
+		curminrec.highpx = curstk.newpx;
+	else
+		curminrec.highpx = std::max(curminrec.highpx, curstk.newpx);
+	if (curminrec.lowpx == 0)
+		curminrec.lowpx = curstk.newpx;
+	else
+		curminrec.lowpx = std::min(curminrec.lowpx, curstk.newpx);
+	if (rpt->m_time>curminrec.lasthqtime)
+	{
+		curminrec.vol = rpt->m_fVolume;
+		curminrec.money = rpt->m_fAmount;
+		curminrec.lasthqtime = rpt->m_time;
+	}
+	if (rpt->m_time>curstk.lasttime)
+	{
+		curstk.lasttime = rpt->m_time;
+	}
+}
+
+
+//用local时间,这个地方注意，可能会有偏移量！！！
+int HqFile::get_min_offset(int hour, int minute)
+{
+	int nCurTimePos = (hour * 60 + minute);
+	int nCount = 0;
+	int nPreCount = 0;
+
+	for (int i = 0; i < param._mts.size(); i++)
+	{
+		SubMarketTime curmt = param._mts[i];
+		curmt.suboffset(this->_market_time_offset);
+		if (curmt._open == -1 || curmt._close == -1)
+		{
+			//如果在这个之外的话，就返回总的时间
+			nCount += nPreCount;
+			return nCount;
+		}
+		if (nCurTimePos < curmt._open)
+		{
+			nCount += nPreCount;
+			return nCount;
+		}
+		nCount += nPreCount;
+		if (nCurTimePos >= curmt._open && nCurTimePos <= curmt._close)
+		{
+			return (nCount + nCurTimePos - curmt._open);
+		}
+		nPreCount = curmt.dist();
+	}
+	nCount += nPreCount;
+	return nCount;
 }
 
 bool HqFile::handle_stk_report_in_thread(std::vector<std::string> *newreports)

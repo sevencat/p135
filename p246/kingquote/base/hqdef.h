@@ -47,6 +47,11 @@ public:
 	float money;//成交金额
 	int32_t position;//持仓量
 	int32_t cjbs;//成交笔数
+
+	int32_t buypx[5];
+	int32_t buyvol[5];
+	int32_t sellpx[5];
+	int32_t sellvol[5];
 };
 
 

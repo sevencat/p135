@@ -4,11 +4,9 @@
 #include "MemMapFile.h"
 #include "../base/BoostFile.h"
 #include "../base/Stockdrv.h"
-#include <asio/io_service.hpp>
 #include "HqCfg.h"
 #include "../base/dtz.h"
 #include "HqLifeCycle.h"
-#include "../base/basic_repeating_timer_asio.h"
 
 namespace pugi
 {
@@ -111,5 +109,7 @@ public:
 	void handle_timer_init_and_shoupan();
 	void handle_timer_refresh_boursetime();
 	void handle_timer(const asio::error_code& e);
+
+	int get_min_offset(int hour, int minute);
 };
 
