@@ -3,6 +3,7 @@
 
 #include "../HqStorage/HqFileMgr.h"
 #include "../HqStorage/HqSrcMgr.h"
+#include "resource.h"
 
 bool HqUiApp::OnInit()
 {
@@ -26,7 +27,8 @@ HqUiFrame::HqUiFrame()
 	wxDefaultPosition,
 	wxDefaultSize)
 {
-	SetIcon(wxICON(IDI_ICONMAIN));
+	wxIcon icon("main");
+	SetIcon(icon);
 	wxMenu *mktmenu = new wxMenu;
 	mktmenu->Append(ID_MKT_SH, wxT("上海股票"));
 	mktmenu->Append(ID_MKT_SZ, wxT("深圳股票"));
