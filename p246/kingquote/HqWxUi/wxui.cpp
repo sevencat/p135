@@ -18,6 +18,7 @@ bool HqUiApp::OnInit()
 wxBEGIN_EVENT_TABLE(HqUiFrame, wxFrame)
 	EVT_MENU(ID_MKT_SH, HqUiFrame::OnMktSh)
 	EVT_MENU(ID_MKT_SZ, HqUiFrame::OnMktSz)
+	EVT_MENU(ID_OP_VIEWMINDATA, HqUiFrame::OnViewFen)
 wxEND_EVENT_TABLE()
 
 HqUiFrame::HqUiFrame()
@@ -30,8 +31,12 @@ HqUiFrame::HqUiFrame()
 	mktmenu->Append(ID_MKT_SH, wxT("上海股票"));
 	mktmenu->Append(ID_MKT_SZ, wxT("深圳股票"));
 
+	wxMenu *opmenu = new wxMenu();
+	opmenu->Append(ID_OP_VIEWMINDATA, wxT("查看分钟数据"));
+
 	wxMenuBar *menuBar = new wxMenuBar;
 	menuBar->Append(mktmenu, wxT("市场选择"));
+	menuBar->Append(opmenu, wxT("数据查看"));
 	SetMenuBar(menuBar);
 
 	CreateStatusBar(2);
@@ -89,4 +94,26 @@ void HqUiFrame::switch_to_mkt(uint32_t mktid)
 	hqtbl->sethq(curfile);
 	grid->SetTable(hqtbl, false, wxGrid::wxGridSelectRows);
 	grid->Refresh();
+}
+
+#include "hqmindataviewdlg.h"
+void HqUiFrame::OnViewFen(wxCommandEvent&)
+{
+	auto rows = grid->GetSelectedRows();
+	if (rows.size() == 0)
+		return;
+	int currowno = rows[0];
+	HqFile *curfile = hqtbl->gethq();
+	if (curfile == NULL)
+		return;
+	HqFileHdr *stkhdr = curfile->stk_hdr;
+	if (stkhdr == nullptr)
+		return;
+
+	HqRecord &curhq = stkhdr->rtrec[currowno];
+	int minoffset = curhq.curminpos;
+	HqMinRecord *mindata = stkhdr->get_min_rec_by_idx(currowno);
+
+	HqMinDataViewDlg dlg(this, mindata, minoffset);
+	dlg.ShowModal();
 }

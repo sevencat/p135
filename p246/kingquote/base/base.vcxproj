@@ -138,6 +138,7 @@
     <ClInclude Include="StkDrv.h" />
     <ClInclude Include="Stockdrv.h" />
     <ClInclude Include="strutil.h" />
+    <ClInclude Include="timeutil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pugixml.cpp" />

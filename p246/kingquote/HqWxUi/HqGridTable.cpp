@@ -1,20 +1,46 @@
 #include "stdafx.h"
 #include "HqGridTable.h"
 #include "../HqStorage/HqFile.h"
+#include "../base/timeutil.h"
+
+enum HqField
+{
+	Fld_Code=0,
+	Fld_Name,
+	FLd_LastMin,//最后分钟线
+	Fld_LastTime,//最后时间
+	Fld_Zdz,//涨跌值
+	Fld_Zdf,//涨跌幅
+	Fld_Preclose,
+	Fld_Openpx,
+	Fld_Highpx,
+	Fld_Lowpx,
+	Fld_Newpx,
+	Fld_Vol,
+	Fld_Money,
+	Fld_Position,
+	Fld_Max,
+};
 
 HqGridTable::HqGridTable()
 {
 	m_attrForOddRows = new wxGridCellAttr;
 	m_attrForOddRows->SetBackgroundColour(*wxLIGHT_GREY);
 	m_attrForOddRows->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTER);
+	m_attrForOddRows->SetReadOnly(true);
 
 	m_defaultCellAttr = new wxGridCellAttr();
 	m_defaultCellAttr->SetAlignment(wxALIGN_RIGHT, wxALIGN_CENTER);
+	m_defaultCellAttr->SetReadOnly(true);
 
 	m_hq = NULL;
 
 	m_colLabels.push_back("代码");
 	m_colLabels.push_back("名称");
+	m_colLabels.push_back("分钟");
+	m_colLabels.push_back("时间");
+	m_colLabels.push_back("涨跌值");
+	m_colLabels.push_back("涨跌幅");
 	m_colLabels.push_back("昨收价");
 	m_colLabels.push_back("开盘价");
 	m_colLabels.push_back("最高价");
@@ -64,18 +90,18 @@ int HqGridTable::GetNumberCols()
 	return m_colLabels.size();
 }
 
-static wxString from_value(double value)
+wxString from_value(double value)
 {
 	return wxString::Format("%.2f", value);
 }
 
-static wxString from_value(int value, int divvalue = 1000)
+wxString from_value(int value, int divvalue = 1000)
 {
 	double curvalue = value / (double)divvalue;
 	return from_value(curvalue);
 }
 
-static wxString from_complex_value(double value)
+wxString from_complex_value(double value)
 {
 	if (value<=10000)
 	{
@@ -87,6 +113,17 @@ static wxString from_complex_value(double value)
 		return from_value(value)+"万";
 	}
 	return from_value(value/10000.0f) + "亿";
+}
+
+extern _tzinfo_t globaltz;
+wxString from_time_t(uint32_t value)
+{
+	_datetime_t utcdt;
+	utcdt.from_gmt_timer(value);
+	_datetime_t localdt = globaltz.to_local(utcdt);
+//	int curoffset = get_min_offset(localdt.hour(), localdt.min());
+	int value2 = localdt.hour() * 10000 + localdt.min() * 100 + localdt.sec();
+	return wxString::Format("%d", value2);
 }
 
 wxString HqGridTable::GetValue(int row, int col)
@@ -101,23 +138,48 @@ wxString HqGridTable::GetValue(int row, int col)
 	HqRecord &currec = hdr->rtrec[row];
 	switch (col)
 	{
-	case 0:
+	case Fld_Code:
 		return currec.symbol;
-	case 1:
+	case Fld_Name:
 		return currec.name;
-	case 2:
+
+	case FLd_LastMin:
+		return wxString::Format("%d", (int)currec.curminpos);
+
+	case Fld_LastTime:
+		return from_time_t(currec.lasttime);
+	case Fld_Zdz:
+	{
+		if (currec.preclosepx > 0.000001)
+			return from_value(currec.newpx - currec.preclosepx,1000);
+		else
+			return "";
+	}
+	case Fld_Zdf:
+		{
+			if (currec.preclosepx > 0.000001)
+			{
+				double zdz = (double)(currec.newpx - currec.preclosepx);
+				double zdf = 100*zdz / (double)currec.preclosepx;
+				return from_value(zdf)+"%";
+			}
+			else
+				return "";
+		}
+
+	case Fld_Preclose:
 		return from_value(currec.preclosepx);
-	case 3:
+	case Fld_Openpx:
 		return from_value(currec.openpx);
-	case 4:
+	case Fld_Highpx:
 		return from_value(currec.highpx);
-	case 5:
+	case Fld_Lowpx:
 		return from_value(currec.lowpx);
-	case 6:
+	case Fld_Newpx:
 		return from_value(currec.newpx);
-	case 7:
+	case Fld_Vol:
 		return from_complex_value(currec.vol);
-	case 8:
+	case Fld_Money:
 		return from_complex_value(currec.money);
 	}
 	return "";

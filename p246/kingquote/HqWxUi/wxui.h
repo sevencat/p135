@@ -17,7 +17,8 @@ public:
 
 enum
 {
-	ID_MKT_SH=100,
+	ID_OP_VIEWMINDATA = 100,
+	ID_MKT_SH=1000,
 	ID_MKT_SZ,
 };
 
@@ -45,4 +46,7 @@ public:
 		switch_to_mkt(0x1200);
 	}
 	void switch_to_mkt(uint32_t mktid);
+
+	void OnViewFen(wxCommandEvent&);
+	
 };

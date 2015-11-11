@@ -232,13 +232,13 @@ int CodeMap::transfer_code(uint16_t &market,char *label)
 
 	if(market=='HS')
 	{
-		transfer_sh_code(label);
+		//transfer_sh_code(label);
 		market=STOCK_MARKET|SH_BOURSE;
 		return 1;
 	}
 	if(market=='ZS')
 	{
-		transfer_sz_code(label);
+		//transfer_sz_code(label);
 		market=STOCK_MARKET|SZ_BOURSE;
 		return 1;
 	}

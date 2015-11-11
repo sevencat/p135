@@ -13,6 +13,10 @@ public:
 	{
 		m_hq = hf;
 	}
+	HqFile *gethq()
+	{
+		return m_hq;
+	}
 
 	// these are pure virtual in wxGridTableBase
 
