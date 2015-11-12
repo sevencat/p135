@@ -44,7 +44,67 @@ void HqFile::init_market(_datetime_t& dt)
 	hdr->stkchgtime = 0;
 	hdr->maxstkcount = param._max_stockcount;
 	hdr->mincount = param._max_mincount;
+	hdr->ticklastpos = hdr->maxstkcount;
+	hdr->curstkcount = 0;
 	stk_hdr = hdr;
+	tick_file.open_existing_file(curfilename.c_str());
+}
+
+//写逐笔
+int HqFile::write_tick(int curpos, HqTick hq_tick)
+{
+	int16_t ntotal = 0;
+	int16_t nextpos = curpos;
+
+	//先找到最后一个pos和fileoffset
+	int32_t prevfileoffset = 0;
+	int16_t prevpos = 0;
+	while (true)
+	{
+		prevfileoffset = stk_hdr->get_tickblock(nextpos);
+		prevpos = nextpos;
+
+		tick_file.seek_to_begin(prevfileoffset);
+		if (!tick_file.read_file(&ntotal,2))
+			return -1;
+		if (!tick_file.read_file(&nextpos, 2))
+			return -1;
+
+		if (nextpos <= 0)
+			break;
+	};
+
+	if (ntotal >= HQTICKCOUNT)
+	{
+		//开始重新分配
+		int16_t newpos = stk_hdr->ticklastpos;
+		int32_t newtickblockfileoffset = stk_hdr->get_tickblock(newpos);
+		if (!tick_file.seek_to_begin(newtickblockfileoffset))
+			return -1;
+		static HqTickBlock tb(1);
+		tick_file.write_file(&tb,sizeof(tb));
+		//跳过开头的8个字节
+		if (!tick_file.seek_to_begin(newtickblockfileoffset + 8))
+			return -1;
+		//每次都是1？
+		tick_file.write_file(&hq_tick, sizeof(hq_tick));
+
+		//将上一个tickblock的地址写成当前的pos
+		tick_file.seek_to_begin(prevfileoffset+2);
+		tick_file.write_file(&newpos, 2);
+
+		stk_hdr->ticklastpos++;
+	}
+	else
+	{
+		tick_file.seek_to_begin(prevfileoffset);
+		ntotal++;
+		tick_file.write_file(&ntotal, 2);
+		//再找偏移量，跳过一个没有用到的
+		tick_file.seek_current(4+(ntotal-1)*sizeof(HqTick));
+		tick_file.write_file(&hq_tick, sizeof(hq_tick));
+	}
+	return 0;
 }
 
 void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
@@ -95,6 +155,20 @@ void HqFile::handle_rpt(RCV_REPORT_STRUCTEx* rpt)
 	}
 	if (curstk.curminpos < curoffset)
 		curstk.curminpos = curoffset;
+
+	//写tick数据
+	if ((rpt->m_time>curstk.lasttime) || (rpt->m_fVolume>curstk.vol))
+	{
+		HqTick curtick;
+		curtick.upttime = localdt.raw_time();
+		curtick.px = curstk.newpx;
+		curtick.vol = curstk.vol;
+		curtick.money = curstk.money;
+		curtick.position = curstk.position;
+		curtick.cjbs = curstk.cjbs;
+		//开始写tick
+		write_tick(curpos, curtick);
+	}
 }
 
 
@@ -149,6 +223,7 @@ bool HqFile::handle_stk_report_in_thread(std::vector<std::string> *newreports)
 void HqFile::close_current_file()
 {
 	stk_hdr = NULL;
+	tick_file.close_file();
 	stk_file.sync();
 	stk_file.close();
 }
@@ -183,6 +258,7 @@ void HqFile::load_exist_files()
 	if (hdr->hdrflag != HDRFLAG)
 		return;
 	stk_hdr = hdr;
+	tick_file.open_existing_file(curfilename.c_str());
 	build_stk_map();
 }
 

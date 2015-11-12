@@ -65,6 +65,7 @@ public:
 		return filename;
 	}
 
+	int write_tick(int curpos, HqTick hq_tick);
 	void handle_rpt(RCV_REPORT_STRUCTEx *rpt);
 
 	bool handle_stk_report_other_thread(std::vector<std::string> *newreports)

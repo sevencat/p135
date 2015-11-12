@@ -19,12 +19,19 @@ public:
 	int32_t cjbs;//成交笔数
 };
 //分配是在文件里一个个的分配的!!!先分配后写!!!，最多的是4800,我们一次性分配1024
+#define HQTICKCOUNT 1024
 class HqTickBlock
 {
 public:
-	int16_t curpos;//当前偏移量
+	int16_t ncount;//当前块数量
 	int16_t nextblock;//下一个块偏移
 	int32_t nouse;//没有用到
+	HqTick tick[HQTICKCOUNT];
+	HqTickBlock(int ntotal=0)
+	{
+		memset(this, 0, sizeof(this));
+		ncount = ntotal;
+	}
 };
 
 //每条记录信息，这是一个头部信息
@@ -96,7 +103,7 @@ public:
 		return strsize;
 	}
 
-	//获取初始化的文件大小
+	//获取初始化的文件大小，这个比头部大小多逐笔的数量
 	static int32_t get_init_size(int recount, int hqmincount)
 	{
 		int32_t totalsize = get_hdr_size(recount, hqmincount);
