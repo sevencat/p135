@@ -16,8 +16,11 @@ HqMinDataViewDlg::HqMinDataViewDlg(wxWindow* parent, HqMinRecord *mindata, int m
 
 	grid = new wxGrid(this, wxID_ANY, wxDefaultPosition, wxSize(750,500), 0);
 
+	//grid->SetUseNativeColLabels(true);
+	grid->UseNativeColHeader(true);
 	// Grid
 	grid->CreateGrid(minoffset, 8);
+	
 	grid->EnableEditing(true);
 	grid->EnableGridLines(true);
 	grid->EnableDragGridSize(false);
@@ -26,7 +29,7 @@ HqMinDataViewDlg::HqMinDataViewDlg(wxWindow* parent, HqMinRecord *mindata, int m
 	// Columns
 	grid->EnableDragColMove(false);
 	grid->EnableDragColSize(true);
-	grid->SetColLabelSize(30);
+	grid->SetColLabelSize(24);
 	grid->SetColLabelValue(0, wxT("时间"));
 	grid->SetColLabelValue(1, wxT("开盘价"));
 	grid->SetColLabelValue(2, wxT("最高价"));
