@@ -78,14 +78,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="HqDataModel.h" />
     <ClInclude Include="HqGridTable.h" />
+    <ClInclude Include="MyVListCtrl.h" />
     <ClInclude Include="HqMinDataViewDlg.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="wxui.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="HqDataModel.cpp" />
     <ClCompile Include="HqGridTable.cpp" />
+    <ClCompile Include="MyVListCtrl.cpp" />
     <ClCompile Include="HqMinDataViewDlg.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">

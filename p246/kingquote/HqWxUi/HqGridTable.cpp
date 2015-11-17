@@ -2,25 +2,8 @@
 #include "HqGridTable.h"
 #include "../HqStorage/HqFile.h"
 #include "../base/timeutil.h"
+#include "HqDataModel.h"
 
-enum HqField
-{
-	Fld_Code=0,
-	Fld_Name,
-	FLd_LastMin,//最后分钟线
-	Fld_LastTime,//最后时间
-	Fld_Zdz,//涨跌值
-	Fld_Zdf,//涨跌幅
-	Fld_Preclose,
-	Fld_Openpx,
-	Fld_Highpx,
-	Fld_Lowpx,
-	Fld_Newpx,
-	Fld_Vol,
-	Fld_Money,
-	Fld_Position,
-	Fld_Max,
-};
 
 HqGridTable::HqGridTable()
 {

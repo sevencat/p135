@@ -19,7 +19,7 @@ bool HqUiApp::OnInit()
 wxBEGIN_EVENT_TABLE(HqUiFrame, wxFrame)
 	EVT_MENU(ID_MKT_SH, HqUiFrame::OnMktSh)
 	EVT_MENU(ID_MKT_SZ, HqUiFrame::OnMktSz)
-	EVT_MENU(ID_OP_VIEWMINDATA, HqUiFrame::OnViewFen)
+	EVT_LIST_ITEM_ACTIVATED(wxID_ANY, HqUiFrame::OnLcDc)
 wxEND_EVENT_TABLE()
 
 HqUiFrame::HqUiFrame()
@@ -44,6 +44,9 @@ HqUiFrame::HqUiFrame()
 	CreateStatusBar(2);
 	SetStatusText("Welcome to King's Stock");
 
+	grid = new MyVListCtrl(this, wxID_ANY, wxPoint(0, 0), wxSize(850, 400), wxLC_HRULES | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_VIRTUAL | wxLC_VRULES);
+	
+	/**
 	grid = new wxGrid(this,
 		wxID_ANY,
 		wxPoint(0, 0),
@@ -51,6 +54,7 @@ HqUiFrame::HqUiFrame()
 	grid->HideRowLabels();
 	grid->SetColLabelSize(24);
 	grid->SetDefaultRowSize(24);
+	*/
 
 
 	int gridW = 600, gridH = 300;
@@ -69,8 +73,7 @@ HqUiFrame::HqUiFrame()
 
 	wxLogMessage("³ÌÐòÒÑÆô¶¯");
 
-	hqtbl = new HqGridTable();
-	grid->SetTable(hqtbl);
+	hqtbl.InitLc(grid);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->Add(grid,1,wxEXPAND);
@@ -93,19 +96,17 @@ HqUiFrame::~HqUiFrame()
 void HqUiFrame::switch_to_mkt(uint32_t mktid)
 {
 	HqFile *curfile = gHqFileMgr.get_by_hsid(mktid);
-	hqtbl->sethq(curfile);
-	grid->SetTable(hqtbl, false, wxGrid::wxGridSelectRows);
+	hqtbl.sethq(curfile);
+	hqtbl.RefreshData();
+	//grid->SetTable(hqtbl, false, wxGrid::wxGridSelectRows);
 	grid->Refresh();
 }
 
 #include "hqmindataviewdlg.h"
-void HqUiFrame::OnViewFen(wxCommandEvent&)
+void HqUiFrame::OnLcDc(wxListEvent& event)
 {
-	auto rows = grid->GetSelectedRows();
-	if (rows.size() == 0)
-		return;
-	int currowno = rows[0];
-	HqFile *curfile = hqtbl->gethq();
+	int currowno = event.GetIndex();
+	HqFile *curfile = hqtbl.gethq();
 	if (curfile == NULL)
 		return;
 	HqFileHdr *stkhdr = curfile->stk_hdr;
@@ -118,4 +119,7 @@ void HqUiFrame::OnViewFen(wxCommandEvent&)
 
 	HqMinDataViewDlg dlg(this, mindata, minoffset);
 	dlg.ShowModal();
+	grid->Refresh();
 }
+
+

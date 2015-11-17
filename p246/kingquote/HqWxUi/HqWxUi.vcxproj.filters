@@ -30,6 +30,12 @@
     <ClInclude Include="HqMinDataViewDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MyVListCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HqDataModel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="wxui.cpp">
@@ -45,6 +51,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="HqMinDataViewDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MyVListCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HqDataModel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
