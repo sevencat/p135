@@ -19,7 +19,10 @@ bool HqUiApp::OnInit()
 wxBEGIN_EVENT_TABLE(HqUiFrame, wxFrame)
 	EVT_MENU(ID_MKT_SH, HqUiFrame::OnMktSh)
 	EVT_MENU(ID_MKT_SZ, HqUiFrame::OnMktSz)
-	EVT_LIST_ITEM_ACTIVATED(wxID_ANY, HqUiFrame::OnLcDc)
+	EVT_MENU(ID_OP_VIEWMINDATA, HqUiFrame::OnViewFen)
+	EVT_MENU(ID_REFRESH_GRID,HqUiFrame::OnRefreshGrid)
+	EVT_TIMER(wxID_ANY, HqUiFrame::OnTimerRefreshGrid)
+	//EVT_LIST_ITEM_ACTIVATED(wxID_ANY, HqUiFrame::OnLcDc)
 wxEND_EVENT_TABLE()
 
 HqUiFrame::HqUiFrame()
@@ -35,6 +38,7 @@ HqUiFrame::HqUiFrame()
 
 	wxMenu *opmenu = new wxMenu();
 	opmenu->Append(ID_OP_VIEWMINDATA, wxT("查看分钟数据"));
+	opmenu->Append(ID_REFRESH_GRID, wxT("刷新数据"));
 
 	wxMenuBar *menuBar = new wxMenuBar;
 	menuBar->Append(mktmenu, wxT("市场选择"));
@@ -44,17 +48,17 @@ HqUiFrame::HqUiFrame()
 	CreateStatusBar(2);
 	SetStatusText("Welcome to King's Stock");
 
-	grid = new MyVListCtrl(this, wxID_ANY, wxPoint(0, 0), wxSize(850, 400), wxLC_HRULES | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_VIRTUAL | wxLC_VRULES);
+	//grid = new MyVListCtrl(this, wxID_ANY, wxPoint(0, 0), wxSize(850, 400), wxLC_HRULES | wxLC_REPORT | wxLC_SINGLE_SEL | wxLC_VIRTUAL | wxLC_VRULES);
 	
-	/**
 	grid = new wxGrid(this,
 		wxID_ANY,
 		wxPoint(0, 0),
 		wxSize(850, 400));
+	grid->SetUseNativeColLabels(true);
+	grid->UseNativeColHeader(true);
 	grid->HideRowLabels();
 	grid->SetColLabelSize(24);
 	grid->SetDefaultRowSize(24);
-	*/
 
 
 	int gridW = 600, gridH = 300;
@@ -73,7 +77,9 @@ HqUiFrame::HqUiFrame()
 
 	wxLogMessage("程序已启动");
 
-	hqtbl.InitLc(grid);
+	hqtbl = new HqGridTable();
+	grid->SetTable(hqtbl,false,wxGrid::wxGridSelectRows);
+	//hqtbl.InitLc(grid);
 
 	wxBoxSizer *topSizer = new wxBoxSizer(wxVERTICAL);
 	topSizer->Add(grid,1,wxEXPAND);
@@ -87,26 +93,63 @@ HqUiFrame::HqUiFrame()
 	gHqFileMgr.load_cfg("E:\\svn\\github\\P135\\p246\\kingquote\\hq\\cfg\\",
 		"E:\\svn\\github\\P135\\p246\\kingquote\\hq\\","E:\\svn\\github\\P135\\p246\\kingquote\\hq\\data\\");
 	gHqSrcMgr.start_stk_dll("E:\\projects\\wjfgp\\StockDrv.dll");
+
+	m_timer_grid_refresh.SetOwner(this, wxID_ANY);
+	m_timer_grid_refresh.Start(3000, false);
 }
 
 HqUiFrame::~HqUiFrame()
 {
 }
 
+void HqUiFrame::OnTimerRefreshGrid(wxTimerEvent& event)
+{
+	hqtbl->RefreshGridData();
+	wxLogMessage("重新刷新");
+}
+
 void HqUiFrame::switch_to_mkt(uint32_t mktid)
 {
 	HqFile *curfile = gHqFileMgr.get_by_hsid(mktid);
-	hqtbl.sethq(curfile);
-	hqtbl.RefreshData();
+	hqtbl->sethq(curfile);
+	hqtbl->RefreshGridData();
 	//grid->SetTable(hqtbl, false, wxGrid::wxGridSelectRows);
-	grid->Refresh();
+
+	//HqFile *curfile = gHqFileMgr.get_by_hsid(mktid);
+	//hqtbl.sethq(curfile);
+	//hqtbl.RefreshData();
+	////grid->SetTable(hqtbl, false, wxGrid::wxGridSelectRows);
+	//grid->Refresh();
 }
 
 #include "hqmindataviewdlg.h"
-void HqUiFrame::OnLcDc(wxListEvent& event)
+//void HqUiFrame::OnLcDc(wxListEvent& event)
+//{
+//	int currowno = event.GetIndex();
+//	HqFile *curfile = hqtbl.gethq();
+//	if (curfile == NULL)
+//		return;
+//	HqFileHdr *stkhdr = curfile->stk_hdr;
+//	if (stkhdr == nullptr)
+//		return;
+//
+//	HqRecord &curhq = stkhdr->rtrec[currowno];
+//	int minoffset = curhq.curminpos;
+//	HqMinRecord *mindata = stkhdr->get_min_rec_by_idx(currowno);
+//
+//	HqMinDataViewDlg dlg(this, mindata, minoffset);
+//	dlg.ShowModal();
+//	grid->Refresh();
+//}
+
+
+void HqUiFrame::OnViewFen(wxCommandEvent&)
 {
-	int currowno = event.GetIndex();
-	HqFile *curfile = hqtbl.gethq();
+	auto rows = grid->GetSelectedRows();
+	if (rows.size() == 0)
+		return;
+	int currowno = rows[0];
+	HqFile *curfile = hqtbl->gethq();
 	if (curfile == NULL)
 		return;
 	HqFileHdr *stkhdr = curfile->stk_hdr;
@@ -119,7 +162,9 @@ void HqUiFrame::OnLcDc(wxListEvent& event)
 
 	HqMinDataViewDlg dlg(this, mindata, minoffset);
 	dlg.ShowModal();
-	grid->Refresh();
 }
 
-
+void HqUiFrame::OnRefreshGrid(wxCommandEvent&)
+{
+	hqtbl->RefreshGridData();
+}

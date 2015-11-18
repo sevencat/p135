@@ -225,3 +225,49 @@ wxString HqGridTable::GetColLabelValue(int col)
 		return m_colLabels[col];
 	}
 }
+
+void HqGridTable::RefreshGridData()
+{
+	wxGrid *grid = GetView();
+	if (grid == NULL)
+		return;
+
+	grid->BeginBatch();
+	wxArrayInt oldselections = grid->GetSelectedRows();
+	grid->ClearSelection();
+
+	if (grid->IsCellEditControlEnabled())
+	{
+		grid->DisableCellEditControl();
+	}
+	int oldcount = grid->GetNumberRows();
+	int newcount = GetNumberRows();
+
+	if (newcount != oldcount)
+	{
+		{
+			wxGridTableMessage pop(this,
+				wxGRIDTABLE_NOTIFY_ROWS_DELETED,
+				0, oldcount);
+			grid->ProcessTableMessage(pop);
+		}
+		{
+			wxGridTableMessage push(this,
+				wxGRIDTABLE_NOTIFY_ROWS_APPENDED,
+				newcount);
+			grid->ProcessTableMessage(push);
+		}
+	}
+	else
+	{
+		//这里全部要自画一下？
+	}
+	for (int i = 0; i < oldselections.size(); i++)
+	{
+		int cursel = oldselections[i];
+		if (cursel < newcount)
+			grid->SelectRow(cursel, true);
+	}
+	grid->EndBatch();
+
+}

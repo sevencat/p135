@@ -42,6 +42,8 @@ public:
 	virtual wxString GetRowLabelValue(int row) override;
 	virtual wxString GetColLabelValue(int col) override;
 
+	void RefreshGridData();
+
 private:
 	wxGridStringArray m_data;
 

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Myvlistctrl.h"
-#include "HqDataModel.h"
+//#include "Myvlistctrl.h"
+//#include "HqDataModel.h"
+#include "HqGridTable.h"
 
 // Define a new application type, each program should derive a class from wxApp
 class HqUiApp : public wxApp
@@ -19,8 +20,10 @@ public:
 enum
 {
 	ID_OP_VIEWMINDATA = 100,
+	ID_REFRESH_GRID,
 	ID_MKT_SH=1000,
 	ID_MKT_SZ,
+	
 };
 
 class HqUiFrame : public wxFrame
@@ -29,12 +32,17 @@ public:
 	HqUiFrame();
 	~HqUiFrame();
 
-	MyVListCtrl  *grid;
+	//MyVListCtrl  *grid;
+	wxGrid  *grid;
 	wxTextCtrl     *logWin;
 	wxLogTextCtrl  *logger;
 	wxLog *m_logOld;
 
-	HqDataModel hqtbl;
+	//HqDataModel hqtbl;
+	HqGridTable *hqtbl;
+
+	wxTimer m_timer_grid_refresh;
+	virtual void OnTimerRefreshGrid(wxTimerEvent& event);
 
 	wxDECLARE_EVENT_TABLE();
 
@@ -48,6 +56,10 @@ public:
 	}
 	void switch_to_mkt(uint32_t mktid);
 
-	virtual void OnLcDc(wxListEvent& event);
+	//virtual void OnLcDc(wxListEvent& event);
+
+	void OnViewFen(wxCommandEvent&);
+
+	void OnRefreshGrid(wxCommandEvent&);
 	
 };
