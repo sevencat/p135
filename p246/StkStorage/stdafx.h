@@ -23,12 +23,17 @@ extern CAppModule _Module;
 #include <atldlgs.h>
 
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <string>
 #include <vector>
 #include <map>
 #include <list>
-#include <asiolite.hpp>
 
+#include <asio/detail/win_mutex.hpp>
+
+void addlog(const char* a_format, ...);
 
 #if defined _M_IX86
   #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")

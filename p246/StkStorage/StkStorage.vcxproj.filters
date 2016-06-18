@@ -43,6 +43,9 @@
     <ClCompile Include="charconv.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mysqlwriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainDlg.h">
@@ -82,6 +85,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="charconv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mysqlwriter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

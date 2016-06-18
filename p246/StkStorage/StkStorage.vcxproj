@@ -121,6 +121,7 @@
     <ClCompile Include="inifile.cpp" />
     <ClCompile Include="MainDlg.cpp" />
     <ClCompile Include="mysqldb.cpp" />
+    <ClCompile Include="mysqlwriter.cpp" />
     <ClCompile Include="NeZipDrv.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -137,6 +138,7 @@
     <ClInclude Include="inifile.h" />
     <ClInclude Include="MainDlg.h" />
     <ClInclude Include="mysqldb.h" />
+    <ClInclude Include="mysqlwriter.h" />
     <ClInclude Include="NeZipDrv.h" />
     <ClInclude Include="NeZipDrv\Stockdrv.h" />
     <ClInclude Include="resource.h" />

@@ -13,15 +13,18 @@ NeZipDrv::~NeZipDrv(void)
 
 bool NeZipDrv::load(const char *dllfile)
 {
+	addlog("开始加载nezip 驱动%s",dllfile);
 	m_stockdrvDll = ::LoadLibrary(dllfile);		//导入动态库（该动态库可以放在其他目录，推荐放置默认位置，以便以后自动升级）
 	if (!m_stockdrvDll)
 	{
+		addlog("加载失败");
 		return false;
 	}
 	InitStockDrv_ = (_InitStockDrv)GetProcAddress(m_stockdrvDll, "InitStockDrv");
 	AskData_ = (_AskData)GetProcAddress(m_stockdrvDll, "AskData");
 	if (!InitStockDrv_ || !AskData_)
 	{
+		addlog("未能成功加载函数");
 		return false;
 	}
 	m_traceCount = 0;
@@ -31,6 +34,7 @@ bool NeZipDrv::load(const char *dllfile)
 	{
 		return OnCallBack((TCP_DATA_HEAD *)pdata);
 	});
+	addlog("加载成功");
 	return true;
 }
 

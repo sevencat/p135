@@ -37,3 +37,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 	return nRet;
 }
+
+
+#pragma comment(lib,"libmysql")
