@@ -5,7 +5,7 @@
 
 void logsqlstr(const char *sql, int ret, MysqlDb *db)
 {
-	addlog("%d;%s", ret, sql);
+	//addlog("%d;%s", ret, sql);
 }
 
 MysqlWriter gMysqlWriter;
@@ -64,6 +64,7 @@ void MysqlWriter::write_day(std::list<KLineData> &kd)
 		gDb.exec(cursql.c_str(), cursql.size());
 	}
 	trans.commit();
+	addlog("写入%d条数据",kd.size());
 }
 
 std::string MysqlWriter::cvtdaysql(KLineData &item)

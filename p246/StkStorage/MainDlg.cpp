@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "inifile.h"
+#include "format.h"
 #include "MainDlg.h"
 #include "mysqlwriter.h"
 std::string gexedir;
@@ -32,6 +33,8 @@ void addlog(const char* pszFormat, ...)
 #define TIMER_LOG 1000
 LRESULT CMainDlg::OnTimer(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
+	int leftsize = gDataWriteQueue.daylinesize();
+	SetWindowText(fmt::format("行情接收程序({0}条数据待写)",leftsize).c_str());
 	if (wParam != TIMER_LOG)
 		return 0;
 	std::string logstr;

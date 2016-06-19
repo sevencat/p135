@@ -29,4 +29,5 @@ protected:
 
 private:
 	static void handle_daydata(TCP_DATA_HEAD *pTcpHead);
+	static void handle_mindata(TCP_DATA_HEAD *pTcpHead,bool ismin1);
 };
