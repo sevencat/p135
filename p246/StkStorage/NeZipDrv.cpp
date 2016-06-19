@@ -235,8 +235,10 @@ void NeZipDrv::handle_mindata(TCP_DATA_HEAD *pTcpHead, bool ismin1)
 				//DL, ZZ, ZJ, SQ, SH, SZ
 				KLineData curkd;
 				_datetime_t utcdt;
-				utcdt.from_gmt_timer(curline.time);
+				utcdt.from_local_timer(curline.time);
+
 				curkd.rq = utcdt.raw_date();
+				curkd.rq = curkd.rq * 10000 + utcdt.raw_time() / 10000;
 				curkd.mkt = mkt;
 				curkd.code = code;
 				curkd.opoenpx = multifloat(curline.open);
@@ -251,5 +253,8 @@ void NeZipDrv::handle_mindata(TCP_DATA_HEAD *pTcpHead, bool ismin1)
 			}
 		}
 	}
-	gDataWriteQueue.merge_daydata(kd);
+	if (ismin1)
+		gDataWriteQueue.merge_min1data(kd);
+	else
+		gDataWriteQueue.merge_min5data(kd);
 }
