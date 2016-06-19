@@ -29,12 +29,12 @@ public:
 	void merge_min1data(std::list<KLineData> &kd)
 	{
 		asio::detail::win_mutex::scoped_lock lock(mtx);
-		min1datalst.splice(daydatalst.end(), kd);
+		min1datalst.splice(min1datalst.end(), kd);
 	}
 	void merge_min5data(std::list<KLineData> &kd)
 	{
 		asio::detail::win_mutex::scoped_lock lock(mtx);
-		min5datalst.splice(daydatalst.end(), kd);
+		min5datalst.splice(min5datalst.end(), kd);
 	}
 
 	int daylinesize()
