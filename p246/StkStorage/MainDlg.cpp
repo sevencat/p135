@@ -98,6 +98,6 @@ LRESULT CMainDlg::OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOO
 
 LRESULT CMainDlg::OnTest(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	stkdrv.querydata("SH600000", DAY_KLINE, true, true, 1, false);
+	stkdrv.querydata("ZZSRS09", DAY_KLINE, false, true, 1, true);
 	return 0;
 }

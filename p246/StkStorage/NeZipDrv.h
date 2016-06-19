@@ -26,4 +26,7 @@ protected:
 	char		m_clientPackInfo[40];	//内部识别数据（由用户填写），申请时原样直接返回
 
 	static BOOL OnCallBack(TCP_DATA_HEAD *pTcpHead);
+
+private:
+	static void handle_daydata(TCP_DATA_HEAD *pTcpHead);
 };

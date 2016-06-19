@@ -134,6 +134,7 @@
     <ClInclude Include="charconv.h" />
     <ClInclude Include="DataWriteQueue.h" />
     <ClInclude Include="decimal.h" />
+    <ClInclude Include="dtz.h" />
     <ClInclude Include="format.h" />
     <ClInclude Include="inifile.h" />
     <ClInclude Include="MainDlg.h" />

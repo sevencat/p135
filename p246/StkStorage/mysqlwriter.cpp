@@ -33,7 +33,7 @@ bool MysqlWriter::init(CIniFile &inicfg)
 		addlog("数据库写线程启动");
 		while (true)
 		{
-			SleepEx(3000,TRUE);
+			SleepEx(100,TRUE);
 			writeonce();
 		}
 	});

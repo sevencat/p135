@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 #include "NeZipDrv.h"
+#include "DataWriteQueue.h"
+#include "dtz.h"
 
 BOOL NeZipDrv::m_initialized;
 
@@ -94,7 +96,14 @@ BOOL NeZipDrv::OnCallBack(TCP_DATA_HEAD *pTcpHead)
 	case MIN15_KLINE:			//15分钟线
 	case MIN30_KLINE:			//30分钟线
 	case MIN60_KLINE:			//60分钟线
+	{
+		return TRUE;
+	}
 	case DAY_KLINE:				//日线
+	{
+		handle_daydata(pTcpHead);
+		return TRUE;
+	}
 	case WEEK_KLINE:			//周线
 	case MONTH_KLINE:			//月线
 	case YEAR_KLINE:			//年
@@ -130,4 +139,57 @@ BOOL NeZipDrv::OnCallBack(TCP_DATA_HEAD *pTcpHead)
 	default:
 		return FALSE;
 	}
+}
+_tzinfo_t globaltz = _tzinfo_t::china();
+#define MINFLOATVALUE 0.00000000001
+
+inline dec::decimal4 multifloat(float value, int multiint = 1000)
+{
+	double xvalue = value;
+	xvalue *= multiint;
+	int64_t xvalue2 = floor(xvalue + 0.5);
+	dec::decimal4 xvalue3=dec::decimal4(10 * xvalue2)/dec::decimal4(multiint);
+	return xvalue3;
+}
+
+void NeZipDrv::handle_daydata(TCP_DATA_HEAD *pTcpHead)
+{
+	int count = pTcpHead->count;
+	RCV_KLINE* pKline = (RCV_KLINE *)pTcpHead->pData;
+	std::list<KLineData> kd;
+
+	std::string mkt;
+	std::string code;
+	
+	for (int i = 0; i < count; i++)
+	{
+		RCV_KLINE &curline = pKline[i];
+		if (curline.head.headTag == EKE_HEAD_TAG)
+		{
+			mkt = std::string(curline.head.marketEx,2);
+			code = curline.head.stockId;
+		}
+		else
+		{
+			if (code.length() > 0)
+			{
+				KLineData curkd;
+				_datetime_t utcdt;
+				utcdt.from_gmt_timer(curline.time);
+				curkd.rq = utcdt.raw_date();
+				curkd.mkt = mkt;
+				curkd.code = code;
+				curkd.opoenpx = multifloat(curline.open);
+				curkd.highpx = multifloat(curline.high);
+				curkd.lowpx = multifloat(curline.low);
+				curkd.closepx = multifloat(curline.close);
+				curkd.vol = curline.volume;
+				curkd.money = multifloat(curline.amount);
+				curkd.pos = 0;
+				curkd.jspx = 0;
+				kd.push_back(curkd);
+			}
+		}
+	}
+	gDataWriteQueue.merge_daydata(kd);
 }
