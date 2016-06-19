@@ -37,9 +37,12 @@ public:
 		min5datalst.splice(min5datalst.end(), kd);
 	}
 
-	int daylinesize()
+	int getdatasize(int &daysize,int &min1size,int &min5size)
 	{
-		return daydatalst.size();
+		daysize=daydatalst.size();
+		min1size = min1datalst.size();
+		min5size = min5datalst.size();
+		return 0;
 	}
 	std::list<KLineData> daydatalst;
 	std::list<KLineData> min1datalst;

@@ -33,8 +33,12 @@ void addlog(const char* pszFormat, ...)
 #define TIMER_LOG 1000
 LRESULT CMainDlg::OnTimer(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-	int leftsize = gDataWriteQueue.daylinesize();
-	SetWindowText(fmt::format("行情接收程序({0}条数据待写)",leftsize).c_str());
+	int daysize = 0;
+	int min1size = 0;
+	int min5size = 0;
+	gDataWriteQueue.getdatasize(daysize,min1size,min5size);
+
+	SetWindowText(fmt::format("行情接收程序(数据待写: 日线:{0},min1:{1},min5:{2})",daysize,min1size,min5size).c_str());
 	if (wParam != TIMER_LOG)
 		return 0;
 	std::string logstr;
