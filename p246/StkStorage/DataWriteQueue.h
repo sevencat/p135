@@ -88,6 +88,23 @@ public:
 		get_daydata(kd, min5datalst);
 	}
 
+	void get_tickdata(std::list<TickData> &kd)
+	{
+		asio::detail::win_mutex::scoped_lock lock(mtx);
+		if (tickdatalst.size() <= 8192)
+		{
+			kd.swap(tickdatalst);
+		}
+		else
+		{
+			std::list<TickData>::iterator it = tickdatalst.begin();
+			std::list<TickData>::iterator it2 = it;
+			for (int i = 0; i < 8192; i++)
+				it2++;
+			kd.splice(kd.end(), tickdatalst, it, it2);
+		}
+	}
+
 	void get_daydata(std::list<KLineData> &kd, std::list<KLineData> &kdlst)
 	{
 		asio::detail::win_mutex::scoped_lock lock(mtx);
