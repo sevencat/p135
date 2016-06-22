@@ -36,9 +36,10 @@ LRESULT CMainDlg::OnTimer(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*b
 	int daysize = 0;
 	int min1size = 0;
 	int min5size = 0;
-	gDataWriteQueue.getdatasize(daysize,min1size,min5size);
+	int ticksize = 0;
+	gDataWriteQueue.getdatasize(daysize,min1size,min5size,ticksize);
 
-	SetWindowText(fmt::format("行情接收程序(数据待写: 日线:{0},min1:{1},min5:{2})",daysize,min1size,min5size).c_str());
+	SetWindowText(fmt::format("行情接收程序(数据待写: 日线:{0},min1:{1},min5:{2},tick:{3})",daysize,min1size,min5size,ticksize).c_str());
 	if (wParam != TIMER_LOG)
 		return 0;
 	std::string logstr;

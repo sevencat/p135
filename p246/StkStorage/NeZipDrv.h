@@ -30,4 +30,7 @@ protected:
 private:
 	static void handle_daydata(TCP_DATA_HEAD *pTcpHead);
 	static void handle_mindata(TCP_DATA_HEAD *pTcpHead,bool ismin1);
+
+	static void handle_reportdata(TCP_DATA_HEAD *pTcpHead);
+	static void handle_tick(TCP_DATA_HEAD *pTcpHead);
 };

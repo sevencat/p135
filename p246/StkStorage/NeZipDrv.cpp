@@ -78,17 +78,13 @@ BOOL NeZipDrv::OnCallBack(TCP_DATA_HEAD *pTcpHead)
 	}
 	case OEM_REPORTDATA:	//实时数据处理模块
 	{
-		OEM_REPORTV5* pReport5;
-		for (UINT i = 0, size = sizeof OEM_REPORTV5; i < count; i++, pData += size)
-		{
-			OEM_REPORTV5 *pReport5 = reinterpret_cast<OEM_REPORTV5*>(pData);		//指针转换
-		}
+		handle_reportdata(pTcpHead);
 		return TRUE;
 	}
 	case TICK_KLINE:		//补分时
 	case TRACE_KLINE:		//补分笔处理程序
 	{
-		RCV_TRACEV50* pTrace = (RCV_TRACEV50 *)pData;
+		handle_tick(pTcpHead);
 		return TRUE;
 	}
 	case MIN1_KLINE:			//1分钟线
@@ -257,4 +253,54 @@ void NeZipDrv::handle_mindata(TCP_DATA_HEAD *pTcpHead, bool ismin1)
 		gDataWriteQueue.merge_min1data(kd);
 	else
 		gDataWriteQueue.merge_min5data(kd);
+}
+
+void NeZipDrv::handle_reportdata(TCP_DATA_HEAD *pTcpHead)
+{
+	UINT count = pTcpHead->count;
+	PSTR pData = pTcpHead->pData;
+	for (UINT i = 0, size = sizeof OEM_REPORTV5; i < count; i++, pData += size)
+	{
+		OEM_REPORTV5 *pReport5 = reinterpret_cast<OEM_REPORTV5*>(pData);
+	}
+}
+
+void NeZipDrv::handle_tick(TCP_DATA_HEAD *pTcpHead)
+{
+	addlog("收到%d条tick数据");
+	UINT count = pTcpHead->count;
+	RCV_TRACEV50* pTrace = (RCV_TRACEV50 *)pTcpHead->pData;
+
+
+	std::list<TickData> ticklst;
+	std::string filtermkt = "DL, ZZ, ZJ, SQ, SH, SZ";
+	TickData tickdata;
+
+	for (UINT i = 0; i < count; i++)
+	{
+		RCV_TRACEV50 &curtick = pTrace[i];
+		if (curtick.head.headTag == EKE_HEAD_TAG)
+		{
+			tickdata.mkt = std::string(curtick.head.marketEx, 2);
+			tickdata.code = curtick.head.stockId;
+			StrUtil::toUpperCase(tickdata.mkt);
+			StrUtil::toUpperCase(tickdata.code);
+			tickdata.lastclose = multifloat(curtick.lastClose);
+			tickdata.openpx = multifloat(curtick.open);
+		}
+		else
+		{
+			if (filtermkt.find(tickdata.mkt) == std::string::npos)
+				continue;
+			for (int idx = 0; idx < 3; idx++)
+			{
+				tickdata.buypx[idx] = multifloat(curtick.pricebuy[i]);
+				tickdata.buyvol[idx] = multifloat(curtick.volbuy[i]);
+				tickdata.sellpx[idx] = multifloat(curtick.pricesell[i]);
+				tickdata.sellvol[idx] = multifloat(curtick.volsell[i]);
+			}
+			ticklst.push_back(tickdata);
+		}
+	}
+	return;
 }

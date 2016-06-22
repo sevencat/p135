@@ -18,6 +18,22 @@ public:
 };
 
 
+class TickData
+{
+public:
+	std::string mkt;
+	std::string code;
+	dec::decimal4 lastclose;
+	dec::decimal4 openpx;
+	int32_t vol;
+	dec::decimal4 money;//期货这里是持仓，股票是成交量
+
+	dec::decimal4 buypx[3];
+	dec::decimal4 buyvol[3];
+	dec::decimal4 sellpx[3];
+	dec::decimal4 sellvol[3];
+};
+
 class DataWriteQueue
 {
 public:
@@ -36,14 +52,22 @@ public:
 		asio::detail::win_mutex::scoped_lock lock(mtx);
 		min5datalst.splice(min5datalst.end(), kd);
 	}
-
-	int getdatasize(int &daysize,int &min1size,int &min5size)
+	void merge_tickdata(std::list<TickData> &kd)
+	{
+		asio::detail::win_mutex::scoped_lock lock(mtx);
+		tickdatalst.splice(tickdatalst.end(), kd);
+	}
+	int getdatasize(int &daysize,int &min1size,int &min5size,int &ticksize)
 	{
 		daysize=daydatalst.size();
 		min1size = min1datalst.size();
 		min5size = min5datalst.size();
+		ticksize = tickdatalst.size();
 		return 0;
 	}
+
+	std::list<TickData> tickdatalst;
+
 	std::list<KLineData> daydatalst;
 	std::list<KLineData> min1datalst;
 	std::list<KLineData> min5datalst;
