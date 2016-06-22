@@ -23,8 +23,10 @@ class TickData
 public:
 	std::string mkt;
 	std::string code;
+	int64_t rq;
 	dec::decimal4 lastclose;
 	dec::decimal4 openpx;
+	dec::decimal4 newpx;
 	int32_t vol;
 	dec::decimal4 money;//期货这里是持仓，股票是成交量
 

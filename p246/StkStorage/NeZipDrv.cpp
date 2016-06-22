@@ -292,6 +292,11 @@ void NeZipDrv::handle_tick(TCP_DATA_HEAD *pTcpHead)
 		{
 			if (filtermkt.find(tickdata.mkt) == std::string::npos)
 				continue;
+			_datetime_t utcdt;
+			utcdt.from_local_timer(curtick.time);
+
+			tickdata.rq = utcdt.raw_date();
+			tickdata.rq = tickdata.rq * 10000 + utcdt.raw_time() / 100;
 			for (int idx = 0; idx < 3; idx++)
 			{
 				tickdata.buypx[idx] = multifloat(curtick.pricebuy[i]);

@@ -68,6 +68,15 @@ void MysqlWriter::writeonce()
 			write_min(curdaydata, false);
 		}
 	}
+
+	{
+		std::list<TickData> curtickdata;
+		gDataWriteQueue.get_tickdata(curtickdata);
+		if (curtickdata.size() > 0)
+		{
+			write_tick(curtickdata);
+		}
+	}
 }
 
 void MysqlWriter::write_day(std::list<KLineData> &kd)
@@ -116,4 +125,24 @@ std::string MysqlWriter::cvtminsql(KLineData &item,bool ismin1)
 		return fmt::format("replace INTO min5 (dt, mkt, code, openpx, highpx, lowpx, closepx, vol, money, jspx, pos) VALUES({0}, '{1}', '{2}', {3}, {4}, {5},{6},{7},{8},{9},{10})",
 			item.rq, item.mkt, item.code, item.opoenpx, item.highpx, item.lowpx, item.closepx, item.vol, item.money, item.jspx, item.pos);
 	}
+}
+
+std::string MysqlWriter::cvtticksql(TickData &item)
+{
+	return fmt::format("replace INTO tick (dt, mkt, code, lastpx, openpx, newpx, vol, money) VALUES({0}, '{1}', '{2}', {3}, {4}, {5}, {6}, {7})",
+		item.rq,item.mkt,item.code,item.lastclose,item.openpx,item.newpx,item.vol,item.money);
+}
+
+void MysqlWriter::write_tick(std::list<TickData> &kd)
+{
+	gDb.ping();
+	MysqlTransaction trans(gDb);
+	for (auto it = kd.begin(); it != kd.end(); it++)
+	{
+		TickData &curitem = *it;
+		std::string cursql = cvtticksql(curitem);
+		gDb.exec(cursql.c_str(), cursql.size());
+	}
+	trans.commit();
+	addlog("写入%d条tick数据", kd.size());
 }

@@ -16,6 +16,9 @@ protected:
 	void write_min(std::list<KLineData> &kd, bool ismin1);
 	std::string cvtdaysql(KLineData &item);
 	std::string cvtminsql(KLineData &item, bool ismin1);
+
+	std::string cvtticksql(TickData &item);
+	void write_tick(std::list<TickData> &kd);
 };
 
 extern MysqlWriter gMysqlWriter;
