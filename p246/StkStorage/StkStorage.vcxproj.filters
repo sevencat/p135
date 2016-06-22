@@ -33,7 +33,6 @@
     <ClCompile Include="DataWriteQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="format.cc" />
     <ClCompile Include="inifile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -44,6 +43,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mysqlwriter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="format.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
