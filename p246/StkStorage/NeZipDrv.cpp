@@ -267,8 +267,8 @@ void NeZipDrv::handle_reportdata(TCP_DATA_HEAD *pTcpHead)
 
 void NeZipDrv::handle_tick(TCP_DATA_HEAD *pTcpHead)
 {
-	addlog("收到%d条tick数据");
 	UINT count = pTcpHead->count;
+	//addlog("收到%d条tick数据",count);
 	RCV_TRACEV50* pTrace = (RCV_TRACEV50 *)pTcpHead->pData;
 
 
@@ -296,7 +296,7 @@ void NeZipDrv::handle_tick(TCP_DATA_HEAD *pTcpHead)
 			utcdt.from_local_timer(curtick.time);
 
 			tickdata.rq = utcdt.raw_date();
-			tickdata.rq = tickdata.rq * 10000 + utcdt.raw_time() / 100;
+			tickdata.rq = tickdata.rq * 1000000 + utcdt.raw_time() / 100;
 			for (int idx = 0; idx < 3; idx++)
 			{
 				tickdata.buypx[idx] = multifloat(curtick.pricebuy[i]);
@@ -306,6 +306,8 @@ void NeZipDrv::handle_tick(TCP_DATA_HEAD *pTcpHead)
 			}
 			ticklst.push_back(tickdata);
 		}
+		gDataWriteQueue.merge_tickdata(ticklst);
+		addlog("收到国内期货数据%d条", ticklst.size());
 	}
 	return;
 }
