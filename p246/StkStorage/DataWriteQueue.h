@@ -110,7 +110,7 @@ public:
 	void get_daydata(std::list<KLineData> &kd, std::list<KLineData> &kdlst)
 	{
 		asio::detail::win_mutex::scoped_lock lock(mtx);
-		if (daydatalst.size() <= 8192)
+		if (kdlst.size() <= 8192)
 		{
 			kd.swap(kdlst);
 		}
